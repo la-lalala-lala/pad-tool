@@ -1,0 +1,319 @@
+@import '../../config/var.less';
+.template-container-body{
+  font-family: Poppins,sans-serif;
+  position: relative;
+  color: #000;
+  //overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  transition: all .5s,-webkit-transform .5s;
+
+  .template-left{
+    z-index: 998;
+    width: @left-menu-width;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+
+    .menu-header{
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      padding: 0 1.5rem 0.5rem;
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+      justify-content: flex-start;
+      height: 90px;
+
+      .project-div {
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        width: 60px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .project-name {
+        font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+        margin-left: 10px;
+        font-size: 20px;
+        color: #ff470d;
+      }
+
+    }
+    .menu-body::-webkit-scrollbar {
+      width: 4px;
+      height: 0;
+    }
+    .menu-body::-webkit-scrollbar-thumb{
+      border-radius: 6px;
+      box-shadow: 8px 0 0 rgba(255,110,64,.15) inset;
+    }
+    .menu-body:hover{
+      overflow-y: scroll;
+    }
+    .menu-body{
+      overflow-y: hidden;
+      outline: none;
+      -webkit-box-flex: 1;
+      flex: 1;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      flex-direction: column;
+      position: relative;
+      padding: 0 1.5rem 1.5rem;
+
+      .dropdown{
+        width: calc(@left-menu-width - 50px);
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 0.5rem;
+        padding: 15px;
+        display: flex;
+        position: relative;
+        flex-shrink: 0;
+        >a{
+          -webkit-box-align: center;
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          color: #ff470d;
+          .avatar{
+            display: inline-block;
+            margin-bottom: 0;
+            height: 3rem;
+            width: 3rem;
+            border-radius: 50%;
+            margin-right: 1rem!important;
+            .rounded-circle{
+              width: 100%;
+              height: 100%;
+              -o-object-fit: cover;
+              object-fit: cover;
+              vertical-align: middle;
+              background-position: center center;
+              background-repeat: no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+          .detail{
+            .account{
+              font-weight: 700;
+            }
+            .notice{
+              color: #6c757d;
+            }
+          }
+        }
+      }
+    }
+  }
+  .template-right{
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    margin-left: @left-menu-width;
+    min-height: 100vh;
+    height: 100vh;
+    .header{
+      z-index: 997;
+      display: flex;
+      height: 90px;
+      -webkit-box-align: center;
+      align-items: center;
+      padding: 0 20px;
+      background-color: #f5f4fe;
+      position: sticky;
+      top: 0;
+
+      .page-title{
+        font-size: 25px;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        font-weight: 500;
+        margin-right: 70px;
+      }
+      .search-form {
+        -webkit-box-flex: 1;
+        flex: 1;
+        margin-right: 50px;
+        .input-group{
+          background-color: #fff;
+          border-radius: 0.5rem;
+          position: relative;
+          display: flex;
+          width: 100%;
+          .btn-outline-light{
+            background: none;
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.675rem 1.25rem;
+            font-size: .875rem;
+            border-radius: 0.5rem;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+          }
+
+          .form-control{
+            border: none;
+            position: relative;
+            -webkit-box-flex: 1;
+            flex: 1 1 auto;
+            min-width: 0;
+            display: block;
+            width: 100%;
+            padding: 0.675rem 1.25rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-clip: padding-box;
+            appearance: none;
+            border-radius: 0.5rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+            font-size: 16px;
+            outline: none;
+          }
+        }
+      }
+      .navbar-nav{
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: row;
+        padding-left: 0;
+        margin-bottom: 0;
+        align-content: center;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 50px;
+      }
+    }
+    .content{
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      .card{
+        height: 1000px;
+        transition: transform .3s,-webkit-transform .3s;
+        position: relative;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: 1rem;
+        padding: 1.5rem;
+      }
+    }
+    .footer{
+      height: 50px;
+      padding: 1.5rem 1.5rem 1.5rem;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: justify;
+      justify-content: space-between;
+      .copyright{
+
+      }
+      .concat{
+        gap: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+        a{
+          color: #666;
+          display: block;
+          padding: 0.5rem 1rem;
+          text-decoration: none;
+          transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+        }
+      }
+    }
+  }
+  // 显示右侧操作区域
+  .notice-panel.panel-show,.editor-panel.panel-show{
+    //visibility: visible;
+    display: flex;
+    opacity: 1;
+    right: 0;
+    //transform: translateX(420px);
+  }
+  .notice-panel{
+    // 宽度交由ts执行
+    background-color: #fff;
+    z-index: 1000;
+    //visibility: hidden;
+    display: none;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    flex-direction: column;
+    transition: all .2s,-webkit-transform .2s;
+    //transition: transform .7s,-webkit-transform .7s;
+    .header{
+      height: 80px;
+      padding: 1.5em;
+      display: flex;
+      align-content: center;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+  .editor-panel{
+    // 宽度交由ts执行
+    background-color: pink;
+    z-index: 1001;
+    //visibility: hidden;
+    display: none;
+    opacity: 0;
+    position: fixed;
+    right: -100%;
+    bottom: 0;
+    top: 0;
+    flex-direction: column;
+    transition: all .2s,-webkit-transform .2s;
+    //transition: transform .7s,-webkit-transform .7s;
+  }
+}
