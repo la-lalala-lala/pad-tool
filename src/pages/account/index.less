@@ -1,25 +1,27 @@
 .account-content{
   padding: 1.5rem;
+  .profile-cover::before {
+    content: "";
+    display: block;
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    background: rgba(255, 255, 255, 0.4);
+  }
   .profile-cover {
+    display: flex;
     height: 350px;
     width: 100%;
     padding: 30px 20px;
     border-radius: 0.5rem;
-    //background-size: contain;
-    //background-position-x: center;
-    //background-position-y: center;
-    //background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
     position: relative;
     overflow: hidden;
-    display: flex;
-    /* 背景图垂直、水平均居中 */
-    background-position: center center;
-    /* 背景图不平铺 */
-    background-repeat: no-repeat;
-    /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
-    background-attachment: fixed;
-    /* 让背景图基于容器大小伸缩 */
-    background-size: cover;
+
+
     .profile-container{
       display: flex;
       align-items: center;

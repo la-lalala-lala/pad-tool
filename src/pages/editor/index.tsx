@@ -208,7 +208,7 @@ const Editor = () => {
                     codemirror: {
                         // depend on codemirror theme name: https://codemirror.net/demo/theme.html
                         // 自行导入主题文件: `import 'codemirror/theme/<theme-name>.css';`
-                        theme: 'default',
+                        theme: 'red',
                     },
                     // 编辑器的高度，默认100%，如果挂载点存在内联设置的height则以内联样式为主
                     height: '100%',
