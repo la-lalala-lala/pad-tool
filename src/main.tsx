@@ -8,8 +8,21 @@ import './index.css'
 /**
  * 入口
  */
+/**
+ * 入口
+ */
+type ThemeData = {
+    borderRadius: number;
+    colorPrimary: string;
+};
+const defaultData: ThemeData = {
+    borderRadius: 6,
+    colorPrimary: '#ff470d',
+};
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={zhCN}
+                    theme={{ token: { colorPrimary: defaultData.colorPrimary, borderRadius: defaultData.borderRadius } }}>
         <App />
     </ConfigProvider>
 );

@@ -107,7 +107,7 @@ const MenuTree:React.FC = (props) => {
                     // 有子级节点，不允许被选中，只能下级才能被选中
                     let appMenu = (<a href="#" onClick={(e)=>openAppMenuHandle(app.path)}>
                             <span className="nav-link-icon">
-                                <Button type="link"  icon={React.createElement(Icon[app.icon])} className="menu-icon"/>
+                                {React.createElement(Icon[app.icon],{className:"menu-icon"})}
                             </span>
                         <span>{app.name}</span>
                         <ArrowRightOutlined className={(_appOpen)?'sub-menu-arrow rotate-in':'sub-menu-arrow'}/>
@@ -120,7 +120,7 @@ const MenuTree:React.FC = (props) => {
                     // 无子级节点，允许被选中
                     let appMenu = (<a href="#" onClick={()=>pageHandle(app.path,'')} className={`/backstage${app.path}`==currentPath?'active':null}>
                             <span className="nav-link-icon">
-                                <Button type="link" icon={React.createElement(Icon[app.icon])} className="menu-icon"/>
+                                {React.createElement(Icon[app.icon],{className:"menu-icon"})}
                             </span>
                         <span>{app.name}</span>
                         {!app.content?null:<span className="badge-rounded-circle">{app.content}</span>}

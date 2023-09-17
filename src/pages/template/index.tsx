@@ -14,6 +14,7 @@ const noticeTransformX = 420;
 // 打开编辑器时的设置
 const editorTransformX = 1000;
 
+// 准备被嵌套的子页面Router信息
 const pages = () => {
     let page = [];
     for(let group of routes){
@@ -44,9 +45,10 @@ const pages = () => {
     }
     return page
 }
+
 const Template = () => {
 
-
+    const location = useLocation();
 
     const [bodyTransform,setBodyTransform] = useState<string>('none')
     const [noticeTransform,setNoticeTransform] = useState<string>('none')
@@ -105,6 +107,30 @@ const Template = () => {
         setEditorTransform(`translateX(${0-value+'px'})`);
     }
 
+    // 准备模板页面的title名称细信息
+    const title = () => {
+        const currentPage = location.pathname
+        for(let group of routes){
+            if (group.children){
+                for(let app of group.children){
+                    if (app.children){
+                        // 还有子级
+                        for(let menu of app.children){
+                            if (currentPage === `/backstage${menu.path}`){
+                                return menu.name;
+                            }
+                        }
+                    }else{
+                        if (currentPage === `/backstage${app.path}`){
+                            return app.name;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     return (
         <div className="template-container-body" style={{transform:bodyTransform}}>
             {/** 头部的组件 */}
@@ -113,10 +139,10 @@ const Template = () => {
                     <div className='project-div' style={{backgroundImage:`url('/picture/favicon.svg')`}}>
                     </div>
                     <div className='project-name'>
-                        亲亲里
+                        映记
                     </div>
                 </div>
-                <div className="menu-body">
+                <div className="menu-account">
                     <div className="dropdown">
                         <a href="#">
                             <div className="avatar">
@@ -132,12 +158,15 @@ const Template = () => {
                             </div>
                         </a>
                     </div>
+                </div>
+
+                <div className="menu-body">
                     <MenuTree/>
                 </div>
             </div>
             <div className="template-right">
                 <div className="header">
-                    <div className="page-title">Chats</div>
+                    <div className="page-title">{title()}</div>
                     <form className="search-form">
                         <div className="input-group">
                             <button className="btn-outline-light" type="button">
@@ -166,11 +195,13 @@ const Template = () => {
                     {/*</div>*/}
                 </div>
                 <div className="footer">
-                    <div className="copyright">© 2021 Vetra - <a href="#" target="_blank">Laborasyon</a></div>
+                    <div className="copyright">
+                        Copyright &copy; 2016 -{(new Date()).getFullYear()} saya.ac.cn - 映记
+                    </div>
                     <nav className="concat">
-                        <a href="#" className="nav-link">Licenses</a>
-                        <a href="#" className="nav-link">Change Log</a>
-                        <a href="#" className="nav-link">Get Help</a>
+                        <a href="#" className="nav-link">极客印记</a>
+                        <a href="#" className="nav-link">综合·一站通</a>
+                        <a href="#" className="nav-link">Github</a>
                     </nav>
                 </div>
             </div>

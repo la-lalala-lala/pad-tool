@@ -16,7 +16,7 @@ export interface RouterNode {
  */
 const routes: Array<RouterNode> = [
     {
-        name: '个人',
+        name: '概览',
         path: '',
         root: true,
         children: [
@@ -29,6 +29,16 @@ const routes: Array<RouterNode> = [
                 display: true,
                 icon: 'HomeOutlined',
                 content: '2'
+            },
+            {
+                name: '最近的笔记',
+                path: '/home1',
+                root: true,
+                children: null,
+                element: lazy(() => import('../pages/account')),
+                display: true,
+                icon: 'HomeOutlined',
+                content: ''
             }
         ],
         element: null,
@@ -37,17 +47,17 @@ const routes: Array<RouterNode> = [
         content: ''
     },
     {
-        name: '应用',
+        name: '随手记',
         path: '',
         root: true,
         children: [
             {
-                name: '提醒事项',
+                name: '笔记',
                 path: '/plan',
                 root: true,
                 children: [
                     {
-                        name: '进行中的',
+                        name: '归档',
                         path: '/plan/activity',
                         root: false,
                         children: null,
@@ -57,7 +67,7 @@ const routes: Array<RouterNode> = [
                         content: ''
                     },
                     {
-                        name: '所有提醒',
+                        name: '草稿',
                         path: '/plan/archive',
                         root: false,
                         children: null,
@@ -79,17 +89,17 @@ const routes: Array<RouterNode> = [
         content: ''
     },
     {
-        name: '应用1',
+        name: '设置',
         path: '',
         root: true,
         children: [
             {
-                name: '提醒事项1',
+                name: '个人',
                 path: '/plan1',
                 root: true,
                 children: [
                     {
-                        name: '进行中的1',
+                        name: '基本信息',
                         path: '/plan/activity1',
                         root: false,
                         children: null,
@@ -99,7 +109,7 @@ const routes: Array<RouterNode> = [
                         content: ''
                     },
                     {
-                        name: '所有提醒1',
+                        name: '日志',
                         path: '/plan/archive1',
                         root: false,
                         children: null,
