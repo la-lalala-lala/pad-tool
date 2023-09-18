@@ -1,7 +1,7 @@
 import React, { useState,Suspense } from 'react';
 import {Routes,Route,useNavigate,useLocation,NavLink} from "react-router-dom";
 import { Button,Spin, Radio, Space, Divider, Tag, ConfigProvider, Badge,notification} from 'antd';
-import {MailOutlined,SearchOutlined,DownloadOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
+import {MailOutlined,SearchOutlined,PlusOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
 import routes from "@/config/routes";
 import './index.less'
 import MenuTree from "@/component/menu"; '@/component/menu'
@@ -179,8 +179,8 @@ const Template = () => {
                         <Badge count={9} overflowCount={99} size="small">
                             <BellOutlined style={{fontSize:'20px'}} onClick={e => handleNoticePanelClick(-noticeTransformX)}/>
                         </Badge>
-                        <Button type="primary" icon={<DownloadOutlined />}>
-                            Download
+                        <Button type="primary" icon={<PlusOutlined/>}>
+                            新建
                         </Button>
                     </div>
                 </div>

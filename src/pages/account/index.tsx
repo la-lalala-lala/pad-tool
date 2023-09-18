@@ -1,5 +1,5 @@
 import "./index.less"
-import {Button} from "antd";
+import {Button,Row,Col} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import React from "react";
 const Account = () => {
@@ -23,6 +23,23 @@ const Account = () => {
                     </div>
                 </div>
             </div>
+            <div className="basic-info">
+                <h6 className="card-title">基本信息</h6>
+                <Row>
+                    <Col span={12}>col-12</Col>
+                    <Col span={12}>col-12</Col>
+                </Row>
+            </div>
+            <Row className="password-autograph">
+                <div className="autograph">
+                    <h6 className="card-title">个性签名</h6>
+                    col-12
+                </div>
+                <div className="autograph">
+                    <h6 className="card-title">安全设置</h6>
+                    col-12
+                </div>
+            </Row>
         </div>
     )
 }
