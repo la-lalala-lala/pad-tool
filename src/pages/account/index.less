@@ -1,5 +1,6 @@
 .account-content{
   padding: 1.5rem;
+  // 背景墙
   .profile-cover::before {
     content: "";
     display: block;
@@ -55,6 +56,7 @@
       }
     }
   }
+  // 基本信息区域
   .basic-info{
     transition: transform .3s,-webkit-transform .3s;
     position: relative;
@@ -72,10 +74,70 @@
     -webkit-box-flex: 1;
     padding: 1.5rem;
   }
+  // 卡片标题样式
   .card-title{
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
   }
+  // 表单控件通用样式
+  .input-control-line{
+    height: 3rem;
+    display: flex;
+    flex-flow: row wrap;
+    min-width: 0;
+    align-content: center;
+    align-items: center;
+    .input-field{
+      display: flex;
+      .field-label{
+        display: block;
+        padding-right: 0.5rem;
+        width: 5rem;
+        text-align: right;
+        line-height: 3rem;
+      }
+      .field-label::after{
+        content: ':';
+      }
+      .input-field-edit-ed{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1;
+        .field-label-value{
+          display: block;
+        }
+        .input-control-btn-edit{
+          margin-left: 1rem;
+          color: #ff470d;
+        }
+      }
+      .input-field-edit-ing{
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        .input-control-value{
+          display: block;
+          flex: 1;
+        }
+        .input-control-btn{
+          width: 3rem;
+          display: flex;
+          align-content: center;
+          justify-content: space-between;
+          align-items: center;
+          margin-left: 1rem;
+          .input-control-btn-save{
+            color: #ff470d;
+          }
+        }
+      }
+    }
+  }
+  // 个性签名和安全区域
   .password-autograph{
     display: flex;
     justify-content: space-between;
@@ -90,6 +152,21 @@
       border-radius: 0.5rem;
       -webkit-box-flex: 1;
       padding: 1.5rem;
+    }
+    .autograph{
+      .field-label-value{
+        word-wrap: break-word;
+      }
+      .input-control-btn-edit{
+        margin-left: 1rem;
+        color: #ff470d;
+      }
+      .input-control-btn{
+        margin-top: 1rem;
+        .input-control-btn-save{
+          margin-right: 1rem;
+        }
+      }
     }
   }
 }
