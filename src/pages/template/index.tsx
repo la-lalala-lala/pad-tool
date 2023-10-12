@@ -1,10 +1,12 @@
-import React, { useState,Suspense } from 'react';
+import React, {useState, Suspense, useContext} from 'react';
 import {Routes,Route,useNavigate,useLocation,NavLink} from "react-router-dom";
 import { Button,Spin, Radio, Space, Divider, Tag, ConfigProvider, Badge,notification} from 'antd';
 import {MailOutlined,SearchOutlined,PlusOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
 import routes from "@/config/routes";
 import './index.less'
-import MenuTree from "@/component/menu"; '@/component/menu'
+import MenuTree from "@/component/menu";
+import NotificationContext from "@/utils/notification-context";
+
 
 
 // 规定没有设置侧边打开时的配置项目
@@ -14,38 +16,6 @@ const noticeTransformX = 420;
 // 打开编辑器时的设置
 const editorTransformX = 1000;
 
-// 准备被嵌套的子页面Router信息
-const pages = () => {
-    let page = [];
-    for(let group of routes){
-        if (group.children){
-            for(let app of group.children){
-                if (app.children){
-                    // 还有子级
-                    for(let menu of app.children){
-                        page.push(
-                            <Route key={menu.path} path={menu.path} element={
-                                <Suspense fallback={<div><Spin size="large"/></div>}>
-                                    <menu.element/>
-                                </Suspense>
-                            } />
-                        )
-                    }
-                }else{
-                    page.push(
-                        <Route key={app.path} path={app.path} element={
-                            <Suspense fallback={<div><Spin size="large"/></div>}>
-                                <app.element/>
-                            </Suspense>
-                        } />
-                    )
-                }
-            }
-        }
-    }
-    return page
-}
-
 const Template = () => {
 
     const location = useLocation();
@@ -53,12 +23,45 @@ const Template = () => {
     const [bodyTransform,setBodyTransform] = useState<string>('none')
     const [noticeTransform,setNoticeTransform] = useState<string>('none')
     const [editorTransform,setEditorTransform] = useState<string>('none')
+    const [drawerContext,setDrawerContext] = useState()
+    const notificationContext = useContext(NotificationContext)
+
+    // 准备被嵌套的子页面Router信息
+    const pages = () => {
+        let page = [];
+        for(let group of routes){
+            if (group.children){
+                for(let app of group.children){
+                    if (app.children){
+                        // 还有子级
+                        for(let menu of app.children){
+                            page.push(
+                                <Route key={menu.path} path={menu.path} element={
+                                    <Suspense fallback={<div><Spin size="large"/></div>}>
+                                        <menu.element openDrawer={openDrawer}/>
+                                    </Suspense>
+                                } />
+                            )
+                        }
+                    }else{
+                        page.push(
+                            <Route key={app.path} path={app.path} element={
+                                <Suspense fallback={<div><Spin size="large"/></div>}>
+                                    <app.element openDrawer={openDrawer}/>
+                                </Suspense>
+                            } />
+                        )
+                    }
+                }
+            }
+        }
+        return page
+    }
 
     const openNotification = (placement: string) => {
-        notification.open({
-            message: 'Notification Title',
-            description:placement
-        });
+        if (notificationContext){
+            notificationContext(placement,"info")
+        }
     };
 
     // 右侧消息面板切换
@@ -130,8 +133,14 @@ const Template = () => {
         }
     }
 
+    // 打开抽屉
+    const openDrawer = (data) => {
+        setDrawerContext(data)
+        handleEditorPanelClick(-editorTransformX)
+    }
 
-    return (
+
+   return (
         <div className="template-container-body" style={{transform:bodyTransform}}>
             {/** 头部的组件 */}
             <div className="template-left">
@@ -211,9 +220,10 @@ const Template = () => {
                     <ArrowRightOutlined onClick={e => handleNoticePanelClick(0)}/>
                 </div>
             </div>
-            {/*<div className={(noneTransformSetting[0]!=editorTransform && noneTransformSetting[1]!==editorTransform)?'editor-panel panel-show':'editor-panel'} style={{transform:editorTransform,width:`${editorTransformX}px`}}>*/}
-            {/*    <span onClick={e => handleEditorPanelClick(0)}>关闭编辑器</span>*/}
-            {/*</div>*/}
+            <div className={(noneTransformSetting[0]!=editorTransform && noneTransformSetting[1]!==editorTransform)?'editor-panel panel-show':'editor-panel'} style={{transform:editorTransform,width:`${editorTransformX}px`}}>
+                <span onClick={e => handleEditorPanelClick(0)}>关闭编辑器</span>
+                {drawerContext}
+            </div>
         </div>
     )
 }

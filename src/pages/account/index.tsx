@@ -1,14 +1,13 @@
 import React, {useState,useEffect} from "react";
 import "./index.less"
-import {Button,Row,Col, Input, DatePicker} from "antd";
+import {Button,Row,Col, Input, DatePicker, Result} from "antd";
 import {EditOutlined,CloseOutlined,CheckOutlined,FormOutlined} from "@ant-design/icons";
 import {disabledDate, returnDefaultValue} from '@/utils/var'
 import dayjs from 'dayjs';
-import Notification from '@/component/notification'
-
+import Edit from './edit'
 const { TextArea } = Input;
 
-const Account = () => {
+const Account = (props) => {
 
     const [loading, setLoading] = useState({
         password:false,
@@ -24,23 +23,8 @@ const Account = () => {
     });
     const [currentUser,setCurrentUser] = useState({})
     const [form, setForm] = useState({});
-    const [notify,setNotify] = useState({type:'',description:''})
 
-    const showNotificationSuccess = () => {
-        setNotify({
-            type: 'success',
-            message:'操作提示',
-            description: '保存成功'
-        })
-    }
 
-    const showNotificationError = () => {
-        setNotify({
-            type: 'error',
-            message:'操作提示',
-            description: '保存失败'
-        })
-    }
 
     /**
      * 双向绑定日期选择
@@ -86,11 +70,11 @@ const Account = () => {
      */
     const handleEditInputSubmit = async (field) => {
         // 首先是从form中提取数据，主要是判断是否为空
-        const value = form[field]
-        if (!value || '' === value) {
-            showNotificationError();// "error", "错误提示", '不允许提交空内容'
-            return;
-        }
+        // const value = form[field]
+        // if (!value || '' === value) {
+        //     showNotificationError();// "error", "错误提示", '不允许提交空内容'
+        //     return;
+        // }
         // // 构造提交参数
         // let args = {account: currentUser.account,token:token}
         // args[field] = value
@@ -267,12 +251,21 @@ const Account = () => {
                             </div>
                     }
                 </div>
-                <div className="autograph">
+                <div className="password">
                     <h6 className="card-title">安全设置</h6>
-                    col-12
+                    { status.password?
+                        <Button onClick={() => handleEditInput('password',false)}>取消</Button>
+                        :
+                        <Result
+                            status={(currentUser.securityExpire && dayjs(currentUser.securityExpire) >= dayjs().endOf('day'))?'success':'error'}
+                            subTitle={
+                                (currentUser.securityExpire && dayjs(currentUser.securityExpire) >= dayjs().endOf('day'))?
+                                    <span className='result-subtitle'>您的密码正在有效期范围内，如需修改，请点击<Button type="link" onClick={() => handleEditInput('password',true)}>修改</Button>按钮进行修改</span>
+                                    :<span className='result-subtitle'>您的密码已经过期，请点击<Button type="link" onClick={() => handleEditInput('password',true)}>修改</Button>按钮及时修改</span>}
+                        />
+                    }
                 </div>
             </Row>
-            <Notification type={notify.type} description={notify.description} message={notify.description}/>
         </div>
     )
 }
