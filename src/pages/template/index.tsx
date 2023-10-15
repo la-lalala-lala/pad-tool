@@ -4,7 +4,7 @@ import { Button,Spin, Radio, Space, Divider, Tag, ConfigProvider, Badge,notifica
 import {MailOutlined,SearchOutlined,PlusOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
 import routes from "@/config/routes";
 import './index.less'
-import MenuTree from "@/component/menu";
+import MenuTree from "@/components/menu";
 import NotificationContext from "@/utils/notification-context";
 
 

@@ -1,11 +1,27 @@
 import React, {useState,useEffect} from "react";
 import "./index.less"
-import {Button,Row,Col, Input, DatePicker, Result} from "antd";
+import {Button,Row,Col, Input, DatePicker, Steps, Result} from "antd";
 import {EditOutlined,CloseOutlined,CheckOutlined,FormOutlined} from "@ant-design/icons";
 import {disabledDate, returnDefaultValue} from '@/utils/var'
 import dayjs from 'dayjs';
 import Edit from './edit'
 const { TextArea } = Input;
+
+
+const steps = [
+    {
+        title: '输入原密码',
+        content: 'First-content',
+    },
+    {
+        title: '输入新密码',
+        content: 'Second-content',
+    },
+    {
+        title: '修改完成',
+        content: 'Last-content',
+    },
+];
 
 const Account = (props) => {
 
@@ -18,11 +34,17 @@ const Account = (props) => {
     const [status, setStatus] = useState({
         autograph:false,
         birthday:false,
-        hometown:false,
-        password:false,
+        hometown:false
     });
     const [currentUser,setCurrentUser] = useState({})
     const [form, setForm] = useState({});
+    // 指示当前进度条位置
+    const [stepsIndex, setStepsIndex] = useState(0);
+    const [stepsContent, setStepsContent] = useState([{key: 0,title: '输入原密码', content: <span>.</span>},]);
+
+    useEffect(()=>{
+        initStepsContent();
+    },[])
 
 
 
@@ -113,6 +135,38 @@ const Account = (props) => {
         //     openNotificationWithIcon("error", "错误提示", msg);
         // }
     }
+
+    const initStepsContent = () => {
+        let steps1 = <div className='steps1'><div className='steps-field-label'>原密码：</div><Input onChange={(e)=>inputChange(e,'password')}  maxLength={20}/></div>
+        let steps2 = <div className='steps2'><div className='steps2-line'><div className='steps-field-label'>新的密码：</div><Input onChange={(e)=>inputChange(e,'password1')}  maxLength={20}/></div><div className='steps2-line'><div className='steps-field-label'>再次输入密码：</div><Input onChange={(e)=>inputChange(e,'password')}  maxLength={20}/></div></div>
+        let steps3 = <Result status="success" title="密码修改成功" subTitle="在您下次登录时，请用新密码登录"/>
+        let _initStepsContent =  [
+            {
+                key: 0,
+                title: '输入原密码',
+                content: steps1,
+            },
+            {
+                key: 1,
+                title: '输入新密码',
+                content: steps2,
+            },
+            {
+                key: 2,
+                title: '修改完成',
+                content: steps3,
+            },
+        ]
+        setStepsContent(_initStepsContent)
+    }
+
+    const next = () => {
+        setStepsIndex(stepsIndex + 1);
+
+    };
+    const prev = () => {
+        setStepsIndex(stepsIndex - 1);
+    };
 
 
     return (
@@ -253,17 +307,20 @@ const Account = (props) => {
                 </div>
                 <div className="password">
                     <h6 className="card-title">安全设置</h6>
-                    { status.password?
-                        <Button onClick={() => handleEditInput('password',false)}>取消</Button>
-                        :
-                        <Result
-                            status={(currentUser.securityExpire && dayjs(currentUser.securityExpire) >= dayjs().endOf('day'))?'success':'error'}
-                            subTitle={
-                                (currentUser.securityExpire && dayjs(currentUser.securityExpire) >= dayjs().endOf('day'))?
-                                    <span className='result-subtitle'>您的密码正在有效期范围内，如需修改，请点击<Button type="link" onClick={() => handleEditInput('password',true)}>修改</Button>按钮进行修改</span>
-                                    :<span className='result-subtitle'>您的密码已经过期，请点击<Button type="link" onClick={() => handleEditInput('password',true)}>修改</Button>按钮及时修改</span>}
-                        />
-                    }
+                    <Steps current={stepsIndex} items={stepsContent} />
+                    <div>{stepsContent[stepsIndex].content}</div>
+                    <div className='steps-footer'>
+                        {stepsIndex < steps.length - 1 && (
+                            <Button type="primary" onClick={() => next()}>
+                                下一步
+                            </Button>
+                        )}
+                        {stepsIndex > 0 && stepsIndex < steps.length - 1  &&(
+                            <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                                上一步
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </Row>
         </div>

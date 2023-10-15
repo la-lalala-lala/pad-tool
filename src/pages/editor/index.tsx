@@ -1,9 +1,10 @@
-import {useState,useEffect} from "react";
+import React, {useState, useRef} from 'react';
 import "./index.less"
-import { CherryEditor } from '@/component/editor';
+import { CherryEditor } from '@/components/editor';
 import * as echarts from 'echarts';
 import MathJax from 'mathjax/es5/tex-svg';
 import Cherry from "cherry-markdown";
+import {Button} from "antd";
 
 /**
  * 自定义一个语法
@@ -71,33 +72,42 @@ const customMenuB = Cherry.createMenuHook('实验室',  {
 
 const Editor = () => {
 
-    /**
-     * 文件伤传
-     * @param file 文件对象
-     */
-    const uploadFile = (file:File) => {
-      console.log(file);
+    const cherryEditorRef = useRef<CherryEditor>();
+
+    const urlProcessor = (url: string, srcType: 'image' | 'audio' | 'video' | 'autolink' | 'link') =>{
+        console.log(`url-processor`, url, srcType);
+        return url;
     }
 
-    // @ts-ignore
+
+    const getContent =() => {
+        let content = cherryEditorRef.current.getContent()
+        console.log(content)
+    }
+
+    const setContent =() => {
+        cherryEditorRef.current.setMarkdown("6666")
+    }
+
+    /**
+     * 通用文件上传
+     * @param file 文件对象
+     */
+    const uploadFile = async (file:File) => {
+        cherryEditorRef.current.doUploadFile(file)
+    }
+
+    //@ts-ignore
     return (
         <div className='login-page'>
-            {/*<div data-tauri-drag-region className='window-title'>*/}
-            {/*    <a className='light red'/>*/}
-            {/*    <a className='light yellow'/>*/}
-            {/*    <a className='light green'/>*/}
-            {/*</div>*/}
-            <CherryEditor
+            <CherryEditor ref={cherryEditorRef} fileUpload={uploadFile}
                 engine={{
                     global: {
-                        urlProcessor(url: string, srcType: 'image' | 'audio' | 'video' | 'autolink' | 'link') {
-                            console.log(`url-processor`, url, srcType);
-                            return url;
-                        },
+                        urlProcessor: urlProcessor,
                     },
                     syntax: {
                         // codeBlock: {
-                        //     theme: 'twilight',
+                        //     theme: 'duotone-light',
                         // },
                         list: {
                             listNested: false, // 同级列表类型转换后变为子级
@@ -157,7 +167,7 @@ const Editor = () => {
                 }}
                 toolbars={{
                     theme: 'light',
-                    sidebar: ['mobilePreview', 'copy'],
+                    //sidebar: ['mobilePreview', 'copy'],
                     bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
                     toolbar: [
                         'bold',
@@ -203,13 +213,9 @@ const Editor = () => {
                         customMenuBName: customMenuB
                     },
                 }}
-                fileUpload={(file:File)=>uploadFile(file)}
+                //fileUpload={(file:File)=>uploadFile(file)}
                 editor={{
-                    codemirror: {
-                        // depend on codemirror theme name: https://codemirror.net/demo/theme.html
-                        // 自行导入主题文件: `import 'codemirror/theme/<theme-name>.css';`
-                        theme: 'red',
-                    },
+                    //theme:'idea',
                     // 编辑器的高度，默认100%，如果挂载点存在内联设置的height则以内联样式为主
                     height: '100%',
                     // defaultModel 编辑器初始化后的默认模式，一共有三种模式：1、双栏编辑预览模式；2、纯编辑模式；3、预览模式
@@ -219,14 +225,32 @@ const Editor = () => {
                     defaultModel: 'edit&preview',
                     // 粘贴时是否自动将html转成markdown
                     convertWhenPaste: true,
+                    codemirror: {
+                        // 是否自动focus 默认为true
+                        autofocus: true
+                    },
+                    // 是否自动将编辑区的内容回写到textarea里
+                    autoSave2Textarea: false,
                 }}
+                fileTypeLimitMap={{
+                    // 上传文件的时候用来指定文件类型
+                    video: 'video/*',
+                    audio: 'audio/*',
+                    image: 'image/*',
+                    word: '.doc,.docx',
+                    pdf: '.pdf',
+                    file: '*',
+                }}
+                // 打开draw.io编辑页的url，如果为空则drawio按钮失效
+                //drawioIframeUrl={window.location.origin + '/CherryMarkdown/drawio_demo.html'}
                 // 是否开启仅预览模式
                 isPreviewOnly={false}
                 // 预览区域跟随编辑器光标自动滚动
-                autoScrollByCursor={ true}
+                autoScrollByCursor={true}
                 // 外层容器不存在时，是否强制输出到body上
-                forceAppend={ true}
+                forceAppend={false}
                 value={"2324"}
+                locale='zh_CN'
             />
         </div>
     )
