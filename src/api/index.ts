@@ -1,7 +1,7 @@
 import NProgress from "./helper/nprogress";
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosError} from "axios"
 import { store } from "@/redux"
-import { setToken } from "@/redux/modules/global"
+import global, { setToken } from "@/redux/modules/global"
 import { ResultEnum } from "@/enums/http-enum"
 import { checkStatus } from "./helper/check-status"
 import { ResultData } from "@/types/api"

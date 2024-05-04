@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Template from "@/pages/template";
 import Login from "@/pages/login";
+
 const Router = () => {
 
     return (

@@ -2,9 +2,14 @@ import React, {useState,useEffect} from "react";
 import "./index.less"
 import {Button,Row,Col, Input, DatePicker, Steps, Result} from "antd";
 import {EditOutlined,CloseOutlined,CheckOutlined,FormOutlined} from "@ant-design/icons";
-import {disabledDate, returnDefaultValue} from '@/utils/var'
+import {disabledDate, isEmptyObject, returnDefaultValue} from '@/utils/var'
 import dayjs from 'dayjs';
-import Edit from './edit'
+import Cropper from '@/components/cropper'
+import {useDispatch, useSelector} from "react-redux";
+import {State} from "@/types/redux";
+import {User} from "@/types/user";
+import {formatDate_zh_CN} from "@/utils/date";
+import {userStatus} from "@/utils/code";
 const { TextArea } = Input;
 
 
@@ -36,7 +41,9 @@ const Account = (props) => {
         birthday:false,
         hometown:false
     });
-    const [currentUser,setCurrentUser] = useState({})
+    const dispatch = useDispatch()
+    const {user,log} = useSelector((state:State) => state.global)
+    const [currentUser,setCurrentUser] = useState<User.ResUser>(user)
     const [form, setForm] = useState({});
     // 指示当前进度条位置
     const [stepsIndex, setStepsIndex] = useState(0);
@@ -175,17 +182,26 @@ const Account = (props) => {
                 <div className="profile-container">
                     <div className="avatar-description">
                         <div className="avatar">
-                            <img src="/picture/2023012735446.png" className="rounded-circle"/>
+                            <Cropper/>
                         </div>
                         <div className="description">
-                            <h3 className="mb-1">亲亲里</h3>
-                            <small>Accountant</small>
+                            <div className='account-detail'>
+                                <h3>{returnDefaultValue(currentUser.name)}</h3>
+                                <span className='account-status'>{userStatus(user.state)}用户</span>
+                            </div>
+                            <small>
+                                {
+                                    !(isEmptyObject(log)) ?
+                                        <span>{`您上次【${formatDate_zh_CN(log.date)}】在:${log.city}(${log.ip})，进行:${log.detail}操作，如不是您所为，请及时修改密码。`}</span> :
+                                        <span>Hi，这是您第一次使用吧？如有需要帮助的请及时联系运营团队。</span>
+                                }
+                            </small>
                         </div>
                     </div>
                     <div className="edit-avatar">
-                        <Button type="primary" icon={<EditOutlined />}>
-                            更换头像
-                        </Button>
+                        {/*<Button type="primary" icon={<EditOutlined />}>*/}
+                        {/*    更换头像*/}
+                        {/*</Button>*/}
                     </div>
                 </div>
             </div>
@@ -290,11 +306,12 @@ const Account = (props) => {
                                 <TextArea
                                     showCount
                                     maxLength={80}
+                                    onChange={(e)=>inputChange(e,'autograph')} value={form.autograph}
                                     style={{ height: 120, resize: 'none' }}
                                     placeholder="disable resize"
                                 />
                                 <div className='input-control-btn'>
-                                    <CheckOutlined loading={loading.hometown} onClick={() => handleEditInputSubmit('autograph')} className='input-control-btn-save'/>
+                                    <CheckOutlined loading={loading.autograph} onClick={() => handleEditInputSubmit('autograph')} className='input-control-btn-save'/>
                                     <CloseOutlined onClick={() => handleEditInput('autograph',false)} />
                                 </div>
                             </div>

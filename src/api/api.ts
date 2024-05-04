@@ -5,7 +5,7 @@ import RequestHttp from './index'
 let backendAPI = '/backend';
 
 // 登录接口
-export const loginApi = params => RequestHttp.post(`${backendAPI}/login`, params).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
+//export const loginApi = params => RequestHttp.post(`${backendAPI}/login`, params).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
 // 登录接口
 export const logoutApi = () => RequestHttp.post(`${backendAPI}/logout`, {}).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
 
@@ -14,7 +14,7 @@ export const logoutApi = () => RequestHttp.post(`${backendAPI}/logout`, {}).then
 export const getRequestToken = () => RequestHttp.get(`${backendAPI}/system/token`, {}).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
 
 // 上传头像
-export const uploadLogoApi = params => RequestHttp.post(`${backendAPI}/system/user/logo`, params).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
+//export const uploadLogoApi = params => RequestHttp.post(`${backendAPI}/system/user/logo`, params).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
 // 获取个人信息
 export const getPersonal = params => RequestHttp.get(`${backendAPI}/system/user`, params).then(data =>{return {err:null, result:data}}).catch(err => {return {err:err, result:null}});
 // 修改密码

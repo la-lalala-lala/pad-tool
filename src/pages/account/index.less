@@ -35,8 +35,6 @@
         align-items: center;
         flex-direction: row;
         .avatar{
-          height: 5.8rem;
-          width: 5.8rem;
           display: inline-block;
           margin-bottom: 0;
           border-radius: 50%;
@@ -49,6 +47,19 @@
           }
         }
         .description{
+          .account-detail{
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: flex-start;
+            .account-status{
+              margin-left: 1rem;
+              font-size: .6rem;
+              color: #ff470d;
+              background: rgba(255, 110, 64, 0.15);
+              padding: 2px 5px;
+            }
+          }
           small {
             font-size: .875em;
           }

@@ -1,5 +1,6 @@
 import {openNotificationWithIcon} from "@/utils/window";
-
+import { store } from "@/redux"
+import {setToken} from "@/redux/modules/global";
 
 // 封装错误状态判断方法
 
@@ -14,10 +15,10 @@ export const checkStatus = (status: number): void => {
             openNotificationWithIcon("error", "错误提示", '请求失败！请您稍后重试');
             break;
         case 401:
-            openNotificationWithIcon("error", "错误提示", '登录过期！请您重新登录');
             // TODO 检查到未登录时，直接清楚所有的用户信息，并引导到登录页面
-            //Storage.removeAll()
-            //window.location.href = "/"
+            store.dispatch(setToken(""))
+            window.location.href = "/"
+            openNotificationWithIcon("error", "错误提示", '登录过期！请您重新登录');
             break;
         case 403:
             openNotificationWithIcon("error", "错误提示", '当前账号无权限访问！');

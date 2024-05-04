@@ -5,13 +5,15 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist"; //数据持久化
 import reduxThunk from "redux-thunk"
 
+
 // combineReducers合并reducer
 const reducers = combineReducers({
     global
 })
 
 const presistConfig = {
-    key:'react-admin',
+    // 存入localstorage的ley
+    key:'note-pad',
     storage
 }
 

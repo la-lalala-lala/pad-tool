@@ -5,7 +5,7 @@ import {MailOutlined,SearchOutlined,PlusOutlined,BellOutlined,ArrowRightOutlined
 import routes from "@/config/routes";
 import './index.less'
 import MenuTree from "@/components/menu";
-import NotificationContext from "@/utils/notification-context";
+import {NotificationContext,openNotificationWithIcon} from "@/utils/notification-context";
 
 
 
@@ -24,7 +24,7 @@ const Template = () => {
     const [noticeTransform,setNoticeTransform] = useState<string>('none')
     const [editorTransform,setEditorTransform] = useState<string>('none')
     const [drawerContext,setDrawerContext] = useState()
-    const notificationContext = useContext(NotificationContext)
+
 
     // 准备被嵌套的子页面Router信息
     const pages = () => {
@@ -58,11 +58,6 @@ const Template = () => {
         return page
     }
 
-    const openNotification = (placement: string) => {
-        if (notificationContext){
-            notificationContext(placement,"info")
-        }
-    };
 
     // 右侧消息面板切换
     const handleNoticePanelClick = (value:number) => {
@@ -155,14 +150,14 @@ const Template = () => {
                     <div className="dropdown">
                         <a href="#">
                             <div className="avatar">
-                                <div style={{backgroundImage:`url('/picture/2023012735446.png')`}} className="rounded-circle" alt="image"></div>
+                                <div style={{backgroundImage:`url(/picture/2023012735446.png)`}} className="rounded-circle" alt="image"></div>
                             </div>
                             <div className="detail">
                                 <div className="account">
                                     Shmily
                                 </div>
                                 <small className="notice">
-                                    上次登录时间：2023-09-09 16:54:40
+                                    亲亲里
                                 </small>
                             </div>
                         </a>
