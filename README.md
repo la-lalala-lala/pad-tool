@@ -1,4 +1,6 @@
 # Tauri + React + Typescript
+笔记封存
+
 
 ## 1、待验证项目 
 * https://github.com/karainsun/react-ant-switch-themes
