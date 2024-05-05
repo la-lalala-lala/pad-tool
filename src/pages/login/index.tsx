@@ -60,12 +60,6 @@ const Login = () => {
      * 响应登录事件
      */
     const loginHandle = async () => {
-        notification.error({
-            placement: 'bottomRight',
-            message: 'message',
-            description: 'description',
-        });
-        return
         try {
             let {userName,passWord} = login;
             if (null == userName || null == passWord || '' === userName || '' === passWord){

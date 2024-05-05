@@ -183,7 +183,7 @@ const Template = () => {
                         <Badge count={9} overflowCount={99} size="small">
                             <BellOutlined style={{fontSize:'20px'}} onClick={e => handleNoticePanelClick(-noticeTransformX)}/>
                         </Badge>
-                        <Button type="primary" icon={<PlusOutlined/>}>
+                        <Button type="primary" icon={<PlusOutlined/>} onClick={e => handleEditorPanelClick(-editorTransformX)}>
                             新建
                         </Button>
                     </div>
