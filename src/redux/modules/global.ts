@@ -1,38 +1,11 @@
+// redux/modules/global.ts
 import { GlobalState } from "@/types/redux";
 import { createSlice } from "@reduxjs/toolkit"
 
-// 存放token和用户信息的切片
 const globalState: GlobalState = {
-    token: "",
-    user:{
-        account: "",
-        name: "",
-        password: "",
-        sex: "",
-        qq: "",
-        email: "",
-        phone: "",
-        birthday: "",
-        hometown: "",
-        autograph: "",
-        logo: "",
-        background: 2,
-        organize_id: 1,
-        state: 1,
-        create_time: "",
-        update_time: "",
-        background_url: "",
-    },
-    plan:["www"],
-    log:{
-        id: 1,
-        organize: 1,
-        user: "",
-        category: "",
-        ip: "",
-        city: "",
-        date: "",
-        detail: ""
+    token:"",
+    userInfo:{
+        username:""
     }
 }
 
@@ -43,17 +16,11 @@ const globalSlice = createSlice({
         setToken(state: GlobalState, {payload}) {
             state.token = payload
         },
-        setUser(state: GlobalState, {payload}) {
-            state.user = payload
-        },
-        setPlan(state: GlobalState, {payload}) {
-            state.plan = payload
-        },
-        setLog(state: GlobalState, {payload}) {
-            state.log = payload
+        setUserInfo(state: GlobalState, {payload}) {
+            state.userInfo = payload
         }
     }
 })
 
-export const {setToken, setUser,setPlan,setLog} = globalSlice.actions
+export const {setToken, setUserInfo} = globalSlice.actions
 export default globalSlice.reducer

@@ -3,8 +3,7 @@ import global from "./modules/global";
 import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist"; //数据持久化
-import reduxThunk from "redux-thunk"
-
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
 
 // combineReducers合并reducer
 const reducers = combineReducers({
@@ -12,8 +11,7 @@ const reducers = combineReducers({
 })
 
 const presistConfig = {
-    // 存入localstorage的ley
-    key:'note-pad',
+    key:'pad-tool',
     storage
 }
 
@@ -21,7 +19,18 @@ const persistedReducer = persistReducer(presistConfig, reducers)
 
 export const store = configureStore({
     reducer: persistedReducer,
-    middleware: [reduxThunk]
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck:{
+            ignoreActions:[
+                FLUSH,
+                REHYDRATE,
+                PAUSE,
+                PERSIST,
+                PURGE,
+                REGISTER
+            ]
+        }
+    })
 })
 
 export const persistor = persistStore(store)

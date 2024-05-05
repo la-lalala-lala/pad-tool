@@ -1,30 +1,15 @@
-import Router from './router'
-import {BrowserRouter} from 'react-router-dom'
-import {NotificationContext} from '@/utils/notification-context'
-import {notification} from "antd";
-import React from "react";
-import AuthRouter from "@/routers/utils/auth-router";
+import { HashRouter } from "react-router-dom"
+import Router from "@/routers/index"
+import AuthRouter from "@/utils/authRouter"
 
-function App() {
-
-    const [api, contextHolder] = notification.useNotification();
-
-    // 全局的弹窗组件
-    const openNotification = (message: string,description: string,type = 'info') => {
-        api[type]({
-            message: message,
-            description: description,
-        });
-    };
-
+const App = () => {
     return (
-      <BrowserRouter>
-          <NotificationContext.Provider value={openNotification}>
-              {contextHolder}
-              <AuthRouter>
-                  <Router/>
-              </AuthRouter>
-          </NotificationContext.Provider>
-      </BrowserRouter>
-  )}
+        <HashRouter>
+            <AuthRouter>
+                <Router />
+            </AuthRouter>
+        </HashRouter>
+    )
+}
+
 export default App

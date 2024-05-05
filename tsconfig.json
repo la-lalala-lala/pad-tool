@@ -20,8 +20,15 @@
       "@/*": [
         "src/*"// 模块名到基于 baseUrl的路径映射的列表
       ]
-    }
+    },
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
+  //指定要编译的路径列表
   "include": ["src"],
+  //表示要排除的，不编译的文件
+  "exclude": ["node_modules", "dist", "**/*.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,18 +1,18 @@
 import NProgress from "./helper/nprogress";
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosError} from "axios"
 import { store } from "@/redux"
-import global, { setToken } from "@/redux/modules/global"
-import { ResultEnum } from "@/enums/http-enum"
-import { checkStatus } from "./helper/check-status"
+import { setToken } from "@/redux/modules/global"
+import { ResultEnum } from "@/enums/httpEnum"
+import { message } from "antd"
+import { checkStatus } from "./helper/checkStatus"
 import { ResultData } from "@/types/api"
-import { AxiosCanceler } from "./helper/axios-cancel"
-import {openNotificationWithIcon} from "@/utils/window";
-import { showFullScreenLoading, tryHideFullScreenLoading } from "./helper/service-loading"
+import { AxiosCanceler } from "./helper/axiosCancel"
+import { showFullScreenLoading, tryHideFullScreenLoading } from "./helper/serviceLoading"
 
 const axiosCanceler = new AxiosCanceler()
 
 const config = {
-    //默认地址请求地址，可在.env开头文件中修改（不能用，存在跨域），这个地址通过vite的代理配置
+    //默认地址请求地址，可在.env开头文件中修改
     //baseURL: import.meta.env.VITE_API as string,
     // 设置超时时间（10s)
     timeout: ResultEnum.TIMEOUT as number,
@@ -37,13 +37,8 @@ class RequestHttp {
                 // * 将当前请求添加到 pending 中
                 axiosCanceler.addPending(config)
                 config?.headers!.noLoading || showFullScreenLoading()
-                // 需要添加的token 自行设置
-                if ('/backend/login' !== config.url){
-                    //const token:string = store.getState().global.token
-                    //config.headers["x-access-token"] = token
-                    const token:string = store.getState().global.token
-                    config.headers.access_token = token;
-                }
+                const token:string = store.getState().global.token
+                config.headers["x-access-token"] = token
                 return config
             },
             (error: AxiosError) => {
@@ -62,18 +57,16 @@ class RequestHttp {
                 tryHideFullScreenLoading()
                 // * 在请求结束后，移除本次请求（关闭loading)
                 axiosCanceler.removePending(config)
-                // 会话过期操作，或者未登录
-                if (data.code && data.code == ResultEnum.UNAUTHORIZED) {
+                // * 登录失败（code == 599）
+                if (data.code == ResultEnum.OVERDUE) {
                     store.dispatch(setToken(""))
-                    openNotificationWithIcon("error", "错误提示", '您已经长时间未操作，请重新登录！');
-                    window.location.hash = "/"
+                    message.error(data.msg)
+                    window.location.hash = "/login"
                     return Promise.reject(data)
                 }
-
-
                 // * 全局错误信息拦截（防止下载文件的时候返回数据流，没有code，直接报错)
                 if(data.code && data.code !== ResultEnum.SUCCESS) {
-                    openNotificationWithIcon("error", "错误提示",data.msg)
+                    message.error(data.msg)
                     return Promise.reject(data)
                 }
                 // * 请求成功（在页面上除非特殊情况，否则不用处理失败逻辑）
@@ -85,7 +78,7 @@ class RequestHttp {
                 tryHideFullScreenLoading()
                 // 请求超时单独判断，请求超时没有response
                 if(error.message.indexOf("timeout") !== -1) {
-                    openNotificationWithIcon("error", "错误提示", '请求超时，请稍后再试！');
+                    message.error("请求超时，请稍后再试")
                 }
                 // 根据响应的错误状态码， 做不同的处理
                 if(response) {
@@ -102,16 +95,16 @@ class RequestHttp {
 
     // * 常用请求方法封装
     get<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.get(url, {params, _object})
+        return this.service.get(url, {...params, ..._object})
     }
     post<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.post(url, params, _object)
+        return this.service.post(url, {...params, ..._object})
     }
     put<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.put(url, params, _object)
+        return this.service.put(url, {...params, ..._object})
     }
     delete<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.delete(url, {params, _object})
+        return this.service.delete(url, {...params, ..._object})
     }
 }
 

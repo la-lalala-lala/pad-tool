@@ -1,5 +1,4 @@
-// 定义判断类型的工具函数
-
+// utils/is.ts
 const toString = Object.prototype.toString
 
 /**

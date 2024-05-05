@@ -1,46 +1,44 @@
-import { defineConfig, loadEnv} from "vite";
-import react from "@vitejs/plugin-react";
-import path from 'path'
+import {defineConfig, loadEnv} from 'vite'
+import react from '@vitejs/plugin-react'
+import * as path from "path";
 
 // https://vitejs.dev/config/
+
+
 export default ({mode}) => {
-  const env = loadEnv(mode,process.cwd())
-  console.error('env.VITE_API',env.VITE_API)
-  return defineConfig( {
-    plugins: [react()],
+  const env = loadEnv(mode,process.cwd());
+  console.info('-----env.config-----')
+  console.info(env)
+  return defineConfig({
+    plugins: [
+      react()
+    ],
     resolve:{
       alias:{
         '@':path.resolve(__dirname,'./src')
       }
     },
-    // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-    // prevent vite from obscuring rust errors
-    clearScreen: false,
-    // tauri expects a fixed port, fail if that port is not available
     server: {
-      port: 1420,
-      strictPort: true,
+      host: "0.0.0.0", // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。
+      port: 3000, //指定开发服务器端口。注意：如果端口已经被使用，Vite 会自动尝试下一个可用的端口
       proxy: {
         '/backend': {
           target: env.VITE_API,
           changeOrigin: true,
+          //rewrite: path => path.replace(/^\/api/, "") //因为实际的地址不带api，所以要去掉api
         },
-        '/warehouse':{
-          target: env.VITE_API,
-          changeOrigin: true,
-        }
       }
     },
-    // to make use of `TAURI_DEBUG` and other env variables
-    // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
-    envPrefix: ["VITE_", "TAURI_"],
-    build: {
-      // Tauri supports es2021
-      target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
-      // don't minify for debug builds
-      minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
-      // produce sourcemaps for debug builds
-      sourcemap: !!process.env.TAURI_DEBUG,
-    },
-  });
+    build:{
+      outDir: "dist", // 指定输出路径（相对于 项目根目录).
+      minify: "esbuild",  //设置为 false 可以禁用最小化混淆，或是用来指定使用哪种混淆器。默认为 Esbuild，它比 terser 快 20-40 倍，压缩率只差 1%-2%
+      rollupOptions: {
+        output: {
+          chunkFileNames: "js/[name]-[hash].js",
+          entryFileNames: "js/[name]-[hash].js",
+          assetFileNames: "[ext]/[name]-[hash].[ext]"
+        }
+      }
+    }
+  })
 }
