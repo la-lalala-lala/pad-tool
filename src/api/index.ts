@@ -3,7 +3,7 @@ import axios, {AxiosInstance, AxiosRequestConfig, AxiosError} from "axios"
 import { store } from "@/redux"
 import { setToken } from "@/redux/modules/global"
 import { ResultEnum } from "@/enums/httpEnum"
-import { message } from "antd"
+import {openNotificationWithIcon} from "@/utils/window";
 import { checkStatus } from "./helper/checkStatus"
 import { ResultData } from "@/types/api"
 import { AxiosCanceler } from "./helper/axiosCancel"
@@ -12,7 +12,7 @@ import { showFullScreenLoading, tryHideFullScreenLoading } from "./helper/servic
 const axiosCanceler = new AxiosCanceler()
 
 const config = {
-    //默认地址请求地址，可在.env开头文件中修改
+    //默认地址请求地址，可在.env开头文件中修改(vite.config.ts中已经设置了)
     //baseURL: import.meta.env.VITE_API as string,
     // 设置超时时间（10s)
     timeout: ResultEnum.TIMEOUT as number,
@@ -37,8 +37,13 @@ class RequestHttp {
                 // * 将当前请求添加到 pending 中
                 axiosCanceler.addPending(config)
                 config?.headers!.noLoading || showFullScreenLoading()
-                const token:string = store.getState().global.token
-                config.headers["x-access-token"] = token
+                // 需要添加的token 自行设置
+                if ('/backend/login' !== config.url){
+                    //const token:string = store.getState().global.token
+                    //config.headers["x-access-token"] = token
+                    const token:string = store.getState().global.token
+                    config.headers["access_token"] = token;
+                }
                 return config
             },
             (error: AxiosError) => {
@@ -57,16 +62,16 @@ class RequestHttp {
                 tryHideFullScreenLoading()
                 // * 在请求结束后，移除本次请求（关闭loading)
                 axiosCanceler.removePending(config)
-                // * 登录失败（code == 599）
-                if (data.code == ResultEnum.OVERDUE) {
+                // 会话过期操作，或者未登录
+                if (data.code && data.code == ResultEnum.UNAUTHORIZED) {
                     store.dispatch(setToken(""))
-                    message.error(data.msg)
-                    window.location.hash = "/login"
+                    openNotificationWithIcon("error", "错误提示", '您已经长时间未操作，请重新登录！');
+                    window.location.hash = "/"
                     return Promise.reject(data)
                 }
                 // * 全局错误信息拦截（防止下载文件的时候返回数据流，没有code，直接报错)
                 if(data.code && data.code !== ResultEnum.SUCCESS) {
-                    message.error(data.msg)
+                    openNotificationWithIcon("error", "错误提示", data.msg);
                     return Promise.reject(data)
                 }
                 // * 请求成功（在页面上除非特殊情况，否则不用处理失败逻辑）
@@ -78,7 +83,7 @@ class RequestHttp {
                 tryHideFullScreenLoading()
                 // 请求超时单独判断，请求超时没有response
                 if(error.message.indexOf("timeout") !== -1) {
-                    message.error("请求超时，请稍后再试")
+                    openNotificationWithIcon("error", "错误提示", '请求超时，请稍后再试！');
                 }
                 // 根据响应的错误状态码， 做不同的处理
                 if(response) {

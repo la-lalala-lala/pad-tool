@@ -7,6 +7,7 @@ import { store, persistor } from "@/redux"
 import { PersistGate } from 'redux-persist/integration/react'
 import zhCN from 'antd/locale/zh_CN'
 import 'dayjs/locale/zh-cn'
+import '@/index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Provider store={store} locale={zhCN}>

@@ -2,19 +2,23 @@ import {useRoutes} from "react-router-dom"
 import lazyLoad from "@/utils/lazyLoad"
 import React from "react"
 
+
+/**
+ * 根路由（一级路由）
+ */
 export const rootRouter = [
     {
-        path:"/",
-        element: lazyLoad(React.lazy(() => import("@/views/home")))
+        path:"/backstage/*",
+        element: lazyLoad(React.lazy(() => import("@/views/template")))
     },
     {
-        path:'/login',
+        path:'/',
         element: lazyLoad(React.lazy(() => import("@/views/login")))
     }
 ]
 
-const Router = () => {
+const RootRouter = () => {
     return useRoutes(rootRouter)
 }
 
-export default Router
+export default RootRouter

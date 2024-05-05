@@ -1,11 +1,11 @@
-export interface UserInfo {
-    username:string;
-}
+import {User} from "@/types/user";
+import {Log} from "@/types/log";
 
-/* GlobalState */
 export interface GlobalState {
-    token:string;
-    userInfo:UserInfo;
+    token: string;
+    user: User.ResUser;
+    plan: Array<string>;
+    log: Log.ResLog;
 }
 
 /* State */

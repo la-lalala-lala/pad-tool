@@ -1,14 +1,14 @@
-import { HashRouter } from "react-router-dom"
-import Router from "@/routers/index"
+import { BrowserRouter } from "react-router-dom"
+import RootRouter from "@/routers/RootRouter"
 import AuthRouter from "@/utils/authRouter"
 
 const App = () => {
     return (
-        <HashRouter>
+        <BrowserRouter>
             <AuthRouter>
-                <Router />
+                <RootRouter/>
             </AuthRouter>
-        </HashRouter>
+        </BrowserRouter>
     )
 }
 

@@ -27,6 +27,10 @@ export default ({mode}) => {
           changeOrigin: true,
           //rewrite: path => path.replace(/^\/api/, "") //因为实际的地址不带api，所以要去掉api
         },
+        '/warehouse':{
+          target: env.VITE_API,
+          changeOrigin: true,
+        }
       }
     },
     build:{

@@ -11,7 +11,7 @@ const AuthRouter = (props:any) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        !token && navigate('/login')
+        !token && navigate('/')
     },[token, pathname])
 
     return props.children
