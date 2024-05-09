@@ -6,20 +6,20 @@ ul{
   li{
     list-style-type: none;
     >a:hover {
-      color: #ff6e40;
+      color: var(--primary-color);
     }
     >a:hover .menu-icon{
       transform: scale(1.3);
     }
     >a.active {
       position: relative;
-      background: rgba(255,110,64,.15);
-      color: #ff6e40;
-      border-left-color: #ff6e40;
-      border-right-color: #ff6e40;
+      background: var(--primary-background--active-color);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+      border-right-color: var(--primary-color);
     }
     >a.active .nav-link-icon {
-      background-color: #f5f4fe;
+      background-color: var(--primary-background-color);
       font-size: 18px;
     }
     >a {
@@ -27,7 +27,7 @@ ul{
       -webkit-box-align: center;
       align-items: center;
       padding: 10px 20px;
-      color: #000;
+      color: var(--second-fontcolor);
       font-size: 15px;
       transition: background .2s,color .2s;
       border-radius: 5rem;
@@ -54,20 +54,20 @@ ul{
         }
       }
       .badge-rounded-circle{
-        width: 28px;
-        height: 28px;
+        width: var(--left-menu-number-size);
+        height: var(--left-menu-number-size);
         -webkit-box-align: center;
         align-items: center;
         -webkit-box-pack: center;
         justify-content: center;
         border-radius: 50%;
-        background-color: #05b171;
+        background-color: var(--left-menu-number-background-color);
         margin-left: auto;
         display: inline-block;
         font-size: .75em;
         font-weight: 700;
         line-height: 28px;
-        color: #fff;
+        color: var(--left-menu-number-font-color);
         text-align: center;
         white-space: nowrap;
         vertical-align: baseline;

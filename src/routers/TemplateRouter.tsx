@@ -104,20 +104,20 @@ export const routerNodes: Array<RouterNode> = [
                 children: [
                     {
                         name: '基本信息',
-                        path: '/plan/activity1',
+                        path: '/setting/activity1',
                         root: false,
                         children: null,
-                        element: lazyLoad(React.lazy(() => import("@/views/home"))),
+                        element: lazyLoad(React.lazy(() => import("@/views/account"))),
                         display: true,
                         icon: '',
                         content: ''
                     },
                     {
                         name: '日志',
-                        path: '/plan/archive1',
+                        path: '/setting/log',
                         root: false,
                         children: null,
-                        element: lazyLoad(React.lazy(() => import("@/views/home"))),
+                        element: lazyLoad(React.lazy(() => import("@/views/log"))),
                         display: true,
                         icon: '',
                         content: ''

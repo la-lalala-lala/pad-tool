@@ -148,7 +148,7 @@ const Template = () => {
                                 <div className="account">
                                     Shmily
                                 </div>
-                                <small className="notice">
+                                <small className="name">
                                     亲亲里
                                 </small>
                             </div>
@@ -168,13 +168,13 @@ const Template = () => {
                             <button className="btn-outline-light" type="button">
                                 <SearchOutlined className="bi bi-search"/>
                             </button>
-                            <input type="text" className="form-control" placeholder="Search..." aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                            <input type="text" className="search-form" placeholder="Search..." aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                         </div>
                     </form>
                     <div className="navbar-nav">
-                        <SettingOutlined className='setting-icon' onClick={e => handleSettingPanelClick(-settingTransformX)}/>
+                        <SettingOutlined className='setting-icon' onClick={() => handleSettingPanelClick(-settingTransformX)}/>
                         <Badge count={9} overflowCount={99} size="small">
-                            <BellOutlined style={{fontSize:'20px'}} onClick={e => handleNoticePanelClick(-noticeTransformX)}/>
+                            <BellOutlined style={{fontSize:'20px'}} onClick={() => handleNoticePanelClick(-noticeTransformX)}/>
                         </Badge>
                         {/*<Button type="primary" icon={<PlusOutlined/>} onClick={e => openDrawer("1111")}>*/}
                         {/*    新建*/}
