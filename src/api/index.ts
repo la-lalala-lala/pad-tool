@@ -65,8 +65,8 @@ class RequestHttp {
                 // 会话过期操作，或者未登录
                 if (data.code && data.code == ResultEnum.UNAUTHORIZED) {
                     store.dispatch(setToken(""))
-                    openNotificationWithIcon("error", "错误提示", '您已经长时间未操作，请重新登录！');
-                    window.location.hash = "/"
+                    store.dispatch(setToken(""))
+                    window.location.href = "/"
                     return Promise.reject(data)
                 }
                 // * 全局错误信息拦截（防止下载文件的时候返回数据流，没有code，直接报错)
@@ -100,7 +100,7 @@ class RequestHttp {
 
     // * 常用请求方法封装
     get<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.get(url, {...params, ..._object})
+        return this.service.get(url, {params, ..._object})
     }
     post<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
         return this.service.post(url, {...params, ..._object})
@@ -109,7 +109,7 @@ class RequestHttp {
         return this.service.put(url, {...params, ..._object})
     }
     delete<T>(url:string,params?:object,_object = {}): Promise<ResultData<T>> {
-        return this.service.delete(url, {...params, ..._object})
+        return this.service.delete(url, {params, ..._object})
     }
 }
 

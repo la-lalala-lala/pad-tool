@@ -1,6 +1,6 @@
 // api/helper/serviceLoading.tsx
 import ReactDOM from "react-dom/client"
-import Loading from "@/components/Loading"
+import Loading from "@/components/loading"
 
 let needLoadingRequestCount = 0
 

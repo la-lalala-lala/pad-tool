@@ -1,101 +1,72 @@
-import React, {useState, Suspense, useContext} from 'react';
-import {Routes,Route,useNavigate,useLocation,NavLink} from "react-router-dom";
+import React, {useState, Suspense, useEffect} from 'react';
+import {Routes, Route, useNavigate, useLocation, NavLink, useRoutes} from "react-router-dom";
 import { Button,Spin, Radio, Space, Divider, Tag, ConfigProvider, Badge,notification} from 'antd';
 import {MailOutlined,SearchOutlined,SettingOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
-import {routerNodes,TemplateRouter} from "@/routers/TemplateRouter";
+import {RouterNode, routerNodes, TemplateRouter} from "@/routers/TemplateRouter";
 import './index.less'
 import MenuTree from "@/components/menu";
 import {openNotificationWithIcon} from '@/utils/window'
+import {useSelector} from "react-redux";
+import {State} from "@/types/redux";
+import {setLog} from "@/redux/modules/global"
+import {lazyLoadByString} from "@/utils/lazy_load";
+import {Dom} from "@/types/dom";
 
 
-
-// 规定没有设置侧边打开时的配置项目
-const noneTransformSetting = ['translateX(0px)','none']
-// 打开消息列表时的设置
-const noticeTransformX = 420;
-// 打开编辑器时的设置
-const editorTransformX = 1000;
-// 打开设置时的设置
-const settingTransformX = 420;
+// 规定没有设置侧边滑动时的位移
+const unsetTransform:string = 'translateX(0vw)';
+// 规定没有设置侧边滑动时的位移
+const unsetWidth:string = '0vw';
+// 规定侧边打开时的配置项目（生效配置） 第一项默认值，第二项展开值
+const defaultTransformSetting:Array<Dom.TemplateTransform> = [{setTransform:'translateX(-20vw)',setWidth:'20vw'},{setTransform:'translateX(-60vw)',setWidth:'60vw'}];
+const SETTING_PANEL = 0;
+const OTHER_PANEL = 2;
 const Template = () => {
 
     const location = useLocation();
-
-    const [bodyTransform,setBodyTransform] = useState<string>('none')
-    const [noticeTransform,setNoticeTransform] = useState<string>('none')
-    const [editorTransform,setEditorTransform] = useState<string>('none')
-    const [settingTransform,setSettingTransform] = useState<string>('none')
+    const {user,plan} = useSelector((state:State) => state.global)
+    const [bodyTransform,setBodyTransform] = useState<string>(unsetTransform)
+    const [currentTransform,setCurrentTransform] = useState<Dom.TemplateTransform>({setTransform:unsetTransform,setWidth:unsetWidth})
     const [drawerContext,setDrawerContext] = useState()
 
-
-    // 右侧消息面板切换
-    const handleNoticePanelClick = (value:number) => {
-        // 规定 为0 时表示恢复默认
-        if (0 == value){
-            setBodyTransform('none')
-            setNoticeTransform('none');
-            return
+    // 准备被嵌套的子页面Router信息
+    const views = () => {
+        let view = [];
+        for(let group:RouterNode of routerNodes){
+            if (group.children){
+                for(let app:RouterNode of group.children){
+                    if (app.children){
+                        // 还有子级
+                        for(let menu:RouterNode of app.children){
+                            // view.push(
+                            //     <Route key={menu.path} path={menu.path} element={React.cloneElement(menu.element, { openDrawer: openDrawer})}/>
+                            // )
+                            view.push(
+                                <Route key={menu.path} path={menu.path} element={
+                                    lazyLoadByString(<menu.element openDrawer={openDrawer}/>)
+                                } />
+                            )
+                        }
+                    }else{
+                        // view.push(
+                        //     <Route key={app.path} path={app.path} element={React.cloneElement(app.element, { openDrawer: openDrawer})}/>
+                        // )
+                        view.push(
+                            <Route key={app.path} path={app.path} element={
+                                lazyLoadByString(<app.element openDrawer={openDrawer}/>)
+                            } />
+                        )
+                    }
+                }
+            }
         }
-        if (`translateX(${value+'px'})` == bodyTransform){
-            // 如果和之前的相同，理解为用户要关闭
-            setBodyTransform('none')
-            setNoticeTransform('none');
-            return
-        }
-        if(noneTransformSetting[0]!=bodyTransform && noneTransformSetting[1]!==bodyTransform){
-            // 已有打开项目
-            openNotificationWithIcon('info','操作提示','请先关闭右侧已打开弹窗')
-            return;
-        }
-        setBodyTransform(`translateX(${value+'px'})`)
-        setNoticeTransform(`translateX(${0-value+'px'})`);
+        return view
     }
 
-    // 右侧编辑器面板切换
-    const handleEditorPanelClick = (value:number) => {
-        // 规定 为0 时表示恢复默认
-        if (0 == value){
-            setBodyTransform('none')
-            setEditorTransform('none');
-            return
-        }
-        if (`translateX(${value+'px'})` == bodyTransform){
-            // 如果和之前的相同，理解为用户要关闭
-            setBodyTransform('none')
-            setEditorTransform('none');
-            return
-        }
-        if(noneTransformSetting[0]!=bodyTransform && noneTransformSetting[1]!==bodyTransform){
-            // 已有打开项目
-            openNotificationWithIcon('info','操作提示','请先关闭右侧已打开弹窗')
-            return;
-        }
-        setBodyTransform(`translateX(${value+'px'})`)
-        setEditorTransform(`translateX(${0-value+'px'})`);
-    }
+    useEffect(()=>{
+        console.log('plan变化了：',plan)
+    },[plan]);
 
-    // 右侧设置面板切换
-    const handleSettingPanelClick = (value:number) => {
-        // 规定 为0 时表示恢复默认
-        if (0 == value){
-            setBodyTransform('none')
-            setSettingTransform('none');
-            return
-        }
-        if (`translateX(${value+'px'})` == bodyTransform){
-            // 如果和之前的相同，理解为用户要关闭
-            setBodyTransform('none')
-            setSettingTransform('none');
-            return
-        }
-        if(noneTransformSetting[0]!=bodyTransform && noneTransformSetting[1]!==bodyTransform){
-            // 已有打开项目
-            openNotificationWithIcon('info','操作提示','请先关闭右侧已打开弹窗')
-            return;
-        }
-        setBodyTransform(`translateX(${value+'px'})`)
-        setSettingTransform(`translateX(${0-value+'px'})`);
-    }
 
     // 准备模板页面的title名称细信息
     const title = () => {
@@ -120,100 +91,128 @@ const Template = () => {
         }
     }
 
+    // 右侧消息面板切换
+    const panelToggle = (setting:Dom.TemplateTransform,data:any) => {
+        if (setting == null || data == null){
+            setBodyTransform(unsetTransform)
+            setCurrentTransform({setTransform:unsetTransform,setWidth:unsetWidth});
+            return
+        }
+        if (currentTransform.setTransform == setting.setTransform){
+            // 已经打开，再次点击，意味关闭
+            setBodyTransform(unsetTransform)
+            setCurrentTransform({setTransform:unsetTransform,setWidth:unsetWidth});
+            return
+        }
+        if (setting.setTransform == unsetTransform){
+            // 期待关闭
+            setBodyTransform(unsetTransform)
+            setCurrentTransform({setTransform:unsetTransform,setWidth:unsetWidth});
+            return
+        }else{
+            if(unsetTransform != bodyTransform){
+                // 已有打开项目
+                openNotificationWithIcon('info','操作提示','请先关闭右侧已打开弹窗')
+                return;
+            }
+            setDrawerContext(data)
+            setBodyTransform(defaultTransformSetting[0].setTransform)
+            setCurrentTransform({...defaultTransformSetting[0]});
+        }
+    }
+
     // 打开抽屉
     const openDrawer = (data) => {
         setDrawerContext(data)
-        handleEditorPanelClick(-editorTransformX)
+        //handleEditorPanelClick(-editorTransformX)
+    }
+
+    // 右侧设置面板切换
+    const settingPanelHandle = (value:number) => {
+        panelToggle(defaultTransformSetting[value],<div>234556</div>);
     }
 
 
     return (
-        <div className="template-container-body" style={{transform:bodyTransform}}>
-            {/** 头部的组件 */}
-            <div className="template-left">
-                <div className="menu-header">
-                    <div className='project-div' style={{backgroundImage:`url('/picture/favicon.svg')`}}>
-                    </div>
-                    <div className='project-name'>
-                        映记
-                    </div>
-                </div>
-                <div className="menu-account">
-                    <div className="dropdown">
-                        <a href="#">
-                            <div className="avatar">
-                                <div style={{backgroundImage:`url(/picture/2023012735446.png)`}} className="rounded-circle" alt="image"></div>
-                            </div>
-                            <div className="detail">
-                                <div className="account">
-                                    Shmily
-                                </div>
-                                <small className="name">
-                                    亲亲里
-                                </small>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div className="menu-body">
-                    <MenuTree/>
-                </div>
-            </div>
-            <div className="template-right">
-                <div className="header">
-                    <div className="page-title">{title()}</div>
-                    <form className="search-form">
-                        <div className="input-group">
-                            <button className="btn-outline-light" type="button">
-                                <SearchOutlined className="bi bi-search"/>
-                            </button>
-                            <input type="text" className="search-form" placeholder="Search..." aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+        <div className="template-container">
+            <div className="template-container-body" style={{transform:bodyTransform}}>
+                {/** 头部的组件 */}
+                <div className="template-left">
+                    <div className="menu-header">
+                        <div className='project-div' style={{backgroundImage:`url('/picture/favicon.svg')`}}>
                         </div>
-                    </form>
-                    <div className="navbar-nav">
-                        <SettingOutlined className='setting-icon' onClick={() => handleSettingPanelClick(-settingTransformX)}/>
-                        <Badge count={9} overflowCount={99} size="small">
-                            <BellOutlined style={{fontSize:'20px'}} onClick={() => handleNoticePanelClick(-noticeTransformX)}/>
-                        </Badge>
-                        {/*<Button type="primary" icon={<PlusOutlined/>} onClick={e => openDrawer("1111")}>*/}
-                        {/*    新建*/}
-                        {/*</Button>*/}
+                        <div className='project-name'>
+                            映记·知识百宝箱
+                        </div>
+                    </div>
+                    <div className="menu-account">
+                        <div className="dropdown">
+                            <a href="#">
+                                <div className="avatar">
+                                    <div style={{backgroundImage: 'url(' + user.logo + ')'}} className="rounded-circle" alt="image"></div>
+                                </div>
+                                <div className="detail">
+                                    <div className="account">
+                                        {user.account}
+                                    </div>
+                                    <small className="name">
+                                        {user.name}
+                                    </small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="menu-body">
+                        <MenuTree/>
                     </div>
                 </div>
-                <div className="content">
-                    <Suspense>
-                        <TemplateRouter/>
-                    </Suspense>
-                </div>
-                <div className="footer">
-                    <div className="copyright">
-                        Copyright &copy; 2016-{(new Date()).getFullYear()} saya.ac.cn - 映记(亲亲里实验室下属文档中心)
+                <div className="template-right">
+                    <div className="header">
+                        <div className="page-title">{title()}</div>
+                        <form className="search-form">
+                            <div className="input-group">
+                                <button className="btn-outline-light" type="button">
+                                    <SearchOutlined className="bi bi-search"/>
+                                </button>
+                                <input type="text" className="search-form" placeholder="Search..." aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                            </div>
+                        </form>
+                        <div className="navbar-nav">
+                            <SettingOutlined className='setting-icon' onClick={() => settingPanelHandle(SETTING_PANEL)}/>
+                            <Button type="primary" icon={<BellOutlined/>}>
+                                新建
+                            </Button>
+                        </div>
                     </div>
-                    <nav className="concat">
-                        <a href="#" className="nav-link">亲亲里·门户</a>
-                        <a href="#" className="nav-link">亲亲里·一站通</a>
-                        <a href="#" className="nav-link">亲亲里·映记</a>
-                        <a href="#" className="nav-link">Github</a>
-                    </nav>
+                    <div className="content">
+                        <Suspense>
+                            {/*<TemplateRouter/>*/}
+                            <Routes>
+                                {views()}
+                            </Routes>
+                        </Suspense>
+
+                    </div>
+                    <div className="footer">
+                        <div className="copyright">
+                            Copyright &copy; 2016-{(new Date()).getFullYear()} saya.ac.cn - 映记(亲亲里实验室下属文档中心)
+                        </div>
+                        <nav className="concat">
+                            <a href="#" className="nav-link">门户</a>
+                            <a href="#" className="nav-link">一站通</a>
+                            <a href="#" className="nav-link">映记</a>
+                            <a href="#" className="nav-link">Github</a>
+                        </nav>
+                    </div>
                 </div>
             </div>
-            <div className={(noneTransformSetting[0]!=noticeTransform && noneTransformSetting[1]!==noticeTransform)?'notice-panel panel-show':'notice-panel'} style={{transform:noticeTransform,width:`${noticeTransformX}px`}}>
+            <div className={(unsetTransform != currentTransform.setTransform && unsetWidth != currentTransform.setWidth)?'notice-panel panel-show':'notice-panel'} style={{transform:currentTransform.setTransform,width:currentTransform.setWidth}}>
                 <div className="header">
                     <span>通知</span>
-                    <ArrowRightOutlined onClick={e => handleNoticePanelClick(0)}/>
+                    <ArrowRightOutlined onClick={e => panelToggle()}/>
                 </div>
-            </div>
-            <div className={(noneTransformSetting[0]!=editorTransform && noneTransformSetting[1]!==editorTransform)?'editor-panel panel-show':'editor-panel'} style={{transform:editorTransform,width:`${editorTransformX}px`}}>
-                <span onClick={e => handleEditorPanelClick(0)}>关闭编辑器</span>
                 {drawerContext}
-            </div>
-            <div className={(noneTransformSetting[0]!=settingTransform && noneTransformSetting[1]!==settingTransform)?'setting-panel panel-show':'setting-panel'} style={{transform:settingTransform,width:`${settingTransformX}px`}}>
-                <div className="header">
-                    <span>设置</span>
-                    <ArrowRightOutlined onClick={e => handleSettingPanelClick(0)}/>
-                </div>
-                2335454645645
             </div>
         </div>
     )

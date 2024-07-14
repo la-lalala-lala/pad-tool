@@ -152,22 +152,98 @@ html, body {
     color: #fff !important;
     background: var(--primary-color) !important;
 }
+.ant-btn-default{
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background: #ffffff;
+}
 .ant-btn-primary:hover {
     color: #fff !important;
     background: var(--primary-front-active-color) !important;
 }
 /*文本框样式的重写*/
-.ant-input-outlined:hover,.ant-input-outlined:focus,.ant-input-outlined:focus-within,.ant-picker-outlined:focus-within {
+.ant-input-outlined:hover,.ant-input-outlined:focus,
+.ant-select-outlined:hover,.ant-select-outlined:focus,
+.ant-picker-outlined:hover {
     border-color: var(--primary-front-active-color) !important;
     box-shadow: none !important;
     background-color: #ffffff !important;
 }
+
+.ant-select-focused .ant-select-selector,
+.ant-select-selector:hover {
+    border-color: var(--primary-front-active-color) !important;
+    box-shadow: none !important;
+    outline: 0;
+}
+
+/*分页样式*/
+.ant-pagination .ant-pagination-item-active {
+    border-color: var(--primary-background--active-color) !important;
+}
+.ant-pagination .ant-pagination-item-active a{
+    color: var(--primary-front-active-color) !important;
+}
+
+
+/*日期选择框*/
 .ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
     color: #fff !important;
     background: var(--primary-front-active-color) !important;
 }
+
+/*下拉框*/
+
+
+
 /*步骤条的样式重写*/
 .ant-steps .ant-steps-item-process .ant-steps-item-icon {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
 }
+
+/*进度条*/
+#nprogress .bar{
+    background: var(--primary-color) !important;
+}
+
+#nprogress .spinner-icon{
+    border-top-color: var(--primary-color) !important;
+    border-left-color: var(--primary-color) !important;
+}
+
+    /**分页样式**/
+.ant-pagination{
+    width: 100%;
+}
+
+.tool-bar,.data-table {
+    padding-top: 0.5em;
+}
+/*.data-table .ant-table{*/
+/*    background-color: rgba(255, 255, 255, 0.2) !important;*/
+/*}*/
+
+/*!*修改表头文字、背景颜色*!*/
+/*.data-table .ant-table-thead > tr > th,*/
+/*.data-table .ant-table-thead > tr{*/
+/*      background-color:unsetTransform !important;*/
+/*      border-right: 1px solid var(--primary-font-color);*/
+/*      border-bottom: 1px solid var(--primary-font-color);*/
+/*      border-top: 1px solid var(--primary-font-color);*/
+/*  }*/
+
+/*.data-table .ant-table-thead > tr > th:first-child{*/
+/*    border-left: 1px solid var(--primary-font-color);*/
+/*}*/
+
+/*!*修改列表背景颜色*!*/
+/*.data-table   .ant-table-tbody > tr > td{*/
+/*  border-right: 1px solid var(--primary-font-color);*/
+/*  border-bottom: 1px solid var(--primary-font-color);*/
+/*}*/
+
+/*.data-table .ant-table-tbody > tr > td:first-child{*/
+/*    border-left: 1px solid var(--primary-font-color);*/
+/*}*/
+

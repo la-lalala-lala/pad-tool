@@ -94,14 +94,14 @@ const MenuTree:React.FC = (props) => {
                     // 判断菜单是否选中
                     let menuOpen = false;
                     // 是否需要展开
-                    let _appOpen = expectPath==app.path
+                    let _appOpen = expectPath == app.path
                     for (const menuIndex in apps) {
                         const menu = apps[menuIndex];
                         //console.warn('menu.path:'+menu.path)
                         // 如果有一子项选中，则外层完全展开
                         menuOpen = menuOpen || `/backstage${menu.path}`==currentPath
                         leafMenu.push(
-                            <li key={`${menu.name+menuIndex}`}><a href="#" onClick={()=>pageHandle(menu.path,app.path)} className={`/backstage${menu.path}`===currentPath?'active':null}><span>{menu.name}</span></a></li>
+                            <li key={`${menu.name+menuIndex}`}><a href="" onClick={()=>pageHandle(menu.path,app.path)} className={`/backstage${menu.path}`===currentPath?'active':null}><span>{menu.name}</span></a></li>
                         )
                     }
                     // 有子级节点，不允许被选中，只能下级才能被选中
@@ -110,11 +110,11 @@ const MenuTree:React.FC = (props) => {
                                 {React.createElement(Icon[app.icon],{className:"menu-icon"})}
                             </span>
                         <span>{app.name}</span>
-                        <ArrowRightOutlined className={(_appOpen)?'sub-menu-arrow rotate-in':'sub-menu-arrow'}/>
+                        <ArrowRightOutlined className={(_appOpen||menuOpen)?'sub-menu-arrow rotate-in':'sub-menu-arrow'}/>
                         {!app.content?null:<span className="badge-rounded-circle">{app.content}</span>}
                     </a>);
                     //console.warn(app.path,expectPath,menuOpen,_appOpen)
-                    _menu.push(<li key={`${app.name+appIndex}`} className={(_appOpen)?'open':null}>{appMenu}<ul>{leafMenu}</ul></li>)
+                    _menu.push(<li key={`${app.name+appIndex}`} className={(_appOpen||menuOpen)?'open':null}>{appMenu}<ul>{leafMenu}</ul></li>)
                 }else {
                     //console.warn(app.path,currentPath)
                     // 无子级节点，允许被选中

@@ -9,7 +9,7 @@ import { State } from "@/types/redux"
 import { loginApi } from "@/api/modules/login";
 import {openNotificationWithIcon} from '@/utils/window'
 
-const Login = () => {
+const LoginView = () => {
 
     const navigate = useNavigate();
     const [login, setLogin] = useState({userName:'',passWord:''});
@@ -80,6 +80,7 @@ const Login = () => {
             }
         }catch (e) {
             console.error('登录异常:',e)
+            openNotificationWithIcon("error","错误提示", '登录环境异常，请稍后再试')
         }finally {
             setLoading(false);
         }
@@ -109,10 +110,10 @@ const Login = () => {
     // }
 
     return (
-        <div title='亲亲里·统一身份认证入口'>
+        <div title='统一身份认证入口'>
             <div className="login-register-container" style={{backgroundImage: `url(/picture/login/background.jpg`}}>
                 <div className='logo-area'>
-                    <span>映记·亲亲里实验室</span>
+                    <span>映记·知识百宝箱</span>
                 </div>
                 <div className="panel">
                     <div className="content">
@@ -147,4 +148,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default LoginView

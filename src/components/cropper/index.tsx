@@ -163,6 +163,8 @@ const CropperComponent = () => {
                 closable={false}
                 destroyOnClose={true}
                 maskClosable={false}
+                okText='确定'
+                cancelText='取消'
                 open={open}
                 onOk={saveCropperImg}
                 confirmLoading={confirm}

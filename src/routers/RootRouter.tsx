@@ -1,5 +1,5 @@
 import {useRoutes} from "react-router-dom"
-import lazyLoad from "@/utils/lazyLoad"
+import {lazyLoadByFunction} from "@/utils/lazy_load"
 import React from "react"
 
 
@@ -9,11 +9,11 @@ import React from "react"
 export const rootRouter = [
     {
         path:"/backstage/*",
-        element: lazyLoad(React.lazy(() => import("@/views/template")))
+        element: lazyLoadByFunction(React.lazy(() => import("@/views/template")))
     },
     {
         path:'/',
-        element: lazyLoad(React.lazy(() => import("@/views/login")))
+        element: lazyLoadByFunction(React.lazy(() => import("@/views/login")))
     }
 ]
 

@@ -9,3 +9,11 @@ export interface Result {
 export interface ResultData<T = any> extends Result {
     data?:T;
 }
+
+// 分页返回结果
+export interface PageData {
+    page_no: number;
+    page_size: number;
+    total_page: number;
+    total_row: number;
+}

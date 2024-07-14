@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import {ConfigProvider} from 'antd';
 import App from '@/App.tsx'
 import "antd/dist/reset.css"
 import { Provider } from 'react-redux'
@@ -10,9 +11,11 @@ import 'dayjs/locale/zh-cn'
 import '@/index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <Provider store={store} locale={zhCN}>
+    <Provider store={store}>
         <PersistGate persistor={persistor}>
-            <App />
+            <ConfigProvider locale={zhCN}>
+                <App />
+            </ConfigProvider>
         </PersistGate>
     </Provider>
 )

@@ -215,7 +215,7 @@ export default App
 ```typescript
 import {useRoutes} from "react-router-dom"
 
-import Login from "@/views/login/index"
+import LoginView from "@/views/login/index"
 import Home from "@/views/home/index"
 
 export const rootRouter = [
@@ -225,7 +225,7 @@ export const rootRouter = [
     },
     {
         path:'/login',
-        element: <Login></Login>
+        element: <LoginView></LoginView>
     }
 ]
 
@@ -274,7 +274,7 @@ npm install antd -S
 
 但是懒加载会花上一段时间，在这段时间内会有白屏的现象，可以将懒加载的组件用Suspense标签包裹起来，Suspense的fallback属性是组件没有加载出来时显示的内容。
 
-- 在routers下新建 utils/lazyLoad.tsx
+- 在routers下新建 utils/lazyLoadByFunction.tsx
 - lazyLoad接收React.lazy()加载的组件,加载过程中显示antd的Spin组件
 ```typescript
 import React, { Suspense } from 'react';
@@ -285,7 +285,7 @@ import { Spin } from 'antd';
  * @param 需要访问的组件
  * @returns 
  */
-const lazyLoad = (Comp:React.LazyExoticComponent<() => JSX.Element>) => { 
+const lazyLoadByFunction = (Comp:React.LazyExoticComponent<() => JSX.Element>) => { 
   return (
     <>
       <Suspense fallback={
@@ -305,24 +305,24 @@ const lazyLoad = (Comp:React.LazyExoticComponent<() => JSX.Element>) => {
   );
 }
 
-export default lazyLoad
+export default lazyLoadByFunction
 ```
 
 - 在router/index.tsx中将路由中加载的组件改写为懒加载方式
 
 ```typescript
 import {useRoutes} from "react-router-dom"
-import lazyLoad from "./utils/lazyLoad"
+import lazyLoadByFunction from "./utils/lazyLoadByFunction"
 import React from "react"
 
 export const rootRouter = [
     {
         path:"/",
-        element: lazyLoad(React.lazy(() => import("@/views/home")))
+        element: lazyLoadByFunction(React.lazy(() => import("@/views/home")))
     },
     {
         path:'/login',
-        element: lazyLoad(React.lazy(() => import("@/views/login")))
+        element: lazyLoadByFunction(React.lazy(() => import("@/views/login")))
     }
 ]
 
@@ -343,7 +343,7 @@ export default Router
   import logo from "@/assets/images/react.svg"
   import "./index.less"
 
-  const Login = () => {
+  const LoginView = () => {
       return (
           <div className="login-container">
               <div className="login-box">
@@ -359,7 +359,7 @@ export default Router
       )
   }
 
-  export default Login
+  export default LoginView
 ```
 
 ### 9、使用redux
@@ -680,7 +680,7 @@ export class AxiosCanceler {
             config.cancelToken || new axios.CancelToken(cancel => {
                 if(!pendingMap.has(url)) {
                     // 如果pending中不存在当前请求，则添加进去
-                    pendingMap.set(url, cancel)
+                    pendingMap.setTransform(url, cancel)
                 }
             })
     }
@@ -927,15 +927,15 @@ export default new RequestHttp(config)
 新建/api/modules/login.ts，调用刚刚封装好的HttpRequest类中的post方法：
 
 ```typescript
-  import {Login} from "@/types/login"
+  import {LoginView} from "@/types/login"
   import http from "@/api"
 
   /**
   * @name 登录模块
   */
   // 用户登录接口
-  export const loginApi = (params: Login.ReqLoginForm) => {
-      return http.post<Login.ResLogin>(`/login`, params)
+  export const loginApi = (params: LoginView.ReqLoginForm) => {
+      return http.post<LoginView.ResLogin>(`/login`, params)
   }
 ```
 
@@ -943,7 +943,7 @@ export default new RequestHttp(config)
 
 ```typescript
   //  * 登录
-  export namespace Login {
+  export namespace LoginView {
       export interface ReqLoginForm {
           username: string;
           password: string;
@@ -961,7 +961,7 @@ export default new RequestHttp(config)
 import {Button, Form, Input} from "antd"
 import { UserOutlined, LockOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { Login } from "@/types/login";
+import { LoginView } from "@/types/login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "@/api/modules/login";
@@ -974,7 +974,7 @@ const LoginForm = () => {
     const [form] = Form.useForm()
 
     //login
-    const onFinish = async (loginForm: Login.ReqLoginForm) => {
+    const onFinish = async (loginForm: LoginView.ReqLoginForm) => {
         try { // 使用try catch来捕获代码块里所有的抛出异常
             // 将登录按钮的Loading改为true
             setLoading(true)
