@@ -263,7 +263,7 @@ const LogView = () => {
                 </Form>
             </Col>
             <Col span={24} className="data-table">
-                <Table size="small" rowKey="id" bordered loading={loading} columns={columns} dataSource={grid}
+                <Table size="middle" rowKey="id"  loading={loading} columns={columns} dataSource={grid}
                        pagination={{
                            current:pagination.page_no,
                            showTotal: () => `当前第${pagination.page_no}页 共${pagination.total_row}条`,

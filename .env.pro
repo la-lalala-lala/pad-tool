@@ -1,2 +1,2 @@
-VITE_API=https://saya.ac.cn
+VITE_API=http://8.137.34.197:8001/
 VITE_APP_VERSION=1.0.0

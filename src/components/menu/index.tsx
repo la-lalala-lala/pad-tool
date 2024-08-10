@@ -2,13 +2,14 @@ import React from "react";
 import {useEffect,useState} from "react";
 import {Routes,Route,useNavigate,useLocation} from "react-router-dom";
 import { Button, Radio, Space, Divider, Tag, ConfigProvider, Badge,notification} from 'antd';
-import {routerNodes} from "@/routers/TemplateRouter";
 import * as Icon from '@ant-design/icons';
 import {ArrowRightOutlined} from '@ant-design/icons';
 //import RouterNode from '@/config/routes'
-
+import { store } from "@/redux"
 
 import './index.less'
+import {useSelector} from "react-redux";
+import {State} from "@/types/redux";
 
 
 
@@ -20,6 +21,7 @@ import './index.less'
 const MenuTree:React.FC = (props) => {
 
     const navigate = useNavigate();
+    const {menu} = useSelector((state:State) => state.global)
 
     // 左侧菜单li数据
     const [menuNodes,setMenuNodes] = useState([])
@@ -29,12 +31,12 @@ const MenuTree:React.FC = (props) => {
 
     useEffect(()=>{
         // 初始化左侧导航
-        setMenuNodes(getMenuNodes(routerNodes,location.pathname,''));
+        setMenuNodes(getMenuNodes(menu,location.pathname,''));
     },[])
 
     useEffect(()=>{
         // 初始化左侧导航
-        setMenuNodes(getMenuNodes(routerNodes,location.pathname,openAppMenu));
+        setMenuNodes(getMenuNodes(menu,location.pathname,openAppMenu));
     },[openAppMenu])
 
 
@@ -48,16 +50,16 @@ const MenuTree:React.FC = (props) => {
         if (expectPath === openAppMenu){
             // 本次展开的和上次相同，执行收缩
             setOpenAppMenu('')
-            setMenuNodes(getMenuNodes(routerNodes,location.pathname,''));
+            setMenuNodes(getMenuNodes(menu,location.pathname,''));
         }else {
-            setMenuNodes(getMenuNodes(routerNodes,location.pathname,expectPath));
+            setMenuNodes(getMenuNodes(menu,location.pathname,expectPath));
             setOpenAppMenu(expectPath)
         }
     }
 
     const pageHandle = (path:string,parentPath:string) => {
         navigate(`/backstage${path}`)
-        setMenuNodes(getMenuNodes(routerNodes,`/backstage${path}`,parentPath));
+        setMenuNodes(getMenuNodes(menu,`/backstage${path}`,parentPath));
         if (parentPath == ''){
             // 单击只有一级节点的菜单时，关闭已展开的选项
             setOpenAppMenu('')
@@ -101,11 +103,11 @@ const MenuTree:React.FC = (props) => {
                         // 如果有一子项选中，则外层完全展开
                         menuOpen = menuOpen || `/backstage${menu.path}`==currentPath
                         leafMenu.push(
-                            <li key={`${menu.name+menuIndex}`}><a href="" onClick={()=>pageHandle(menu.path,app.path)} className={`/backstage${menu.path}`===currentPath?'active':null}><span>{menu.name}</span></a></li>
+                            <li key={`${menu.name+menuIndex}`}><a href="#!" onClick={()=>pageHandle(menu.path,app.path)} className={`/backstage${menu.path}`===currentPath?'active':null}><span>{menu.name}</span></a></li>
                         )
                     }
                     // 有子级节点，不允许被选中，只能下级才能被选中
-                    let appMenu = (<a href="#" onClick={(e)=>openAppMenuHandle(app.path)}>
+                    let appMenu = (<a href="#!" onClick={(e)=>openAppMenuHandle(app.path)}>
                             <span className="nav-link-icon">
                                 {React.createElement(Icon[app.icon],{className:"menu-icon"})}
                             </span>
@@ -118,7 +120,7 @@ const MenuTree:React.FC = (props) => {
                 }else {
                     //console.warn(app.path,currentPath)
                     // 无子级节点，允许被选中
-                    let appMenu = (<a href="#" onClick={()=>pageHandle(app.path,'')} className={`/backstage${app.path}`==currentPath?'active':null}>
+                    let appMenu = (<a href="#!" onClick={()=>pageHandle(app.path,'')} className={`/backstage${app.path}`==currentPath?'active':null}>
                             <span className="nav-link-icon">
                                 {React.createElement(Icon[app.icon],{className:"menu-icon"})}
                             </span>

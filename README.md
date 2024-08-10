@@ -1,5 +1,13 @@
 # pad-tool(工具板)
 
+## 问题记录
+
+1、模板页面的链接中，点击左侧的链接时，会发生整个页面的刷新
+原因：在原本的react-router-dom v6 中，本身默认就是支持路由切换而不刷新整个页面，但是在这个项目中，由于左侧的菜单列表是手写的，里面用到了原生的a标签，由于href的设置不合理（原来是#），触发了二次的页面的刷新，所以替换为href="#！"或者href="javascript:void(0)"即可
+
+1、参考：https://github.com/Ostask/daodao-knowledge/tree/master/docs/react/02.react%2Bantd%2Breact-router%2Bredux%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F
+2、参考：https://github.com/Ostask/Hooks-Admin/tree/master
+
 末路狂花钱
 ##  框架组成
 - 1.React

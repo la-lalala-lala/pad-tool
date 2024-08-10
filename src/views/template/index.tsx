@@ -2,16 +2,21 @@ import React, {useState, Suspense, useEffect} from 'react';
 import {Routes, Route, useNavigate, useLocation, NavLink, useRoutes} from "react-router-dom";
 import { Button,Spin, Radio, Space, Divider, Tag, ConfigProvider, Badge,notification} from 'antd';
 import {MailOutlined,SearchOutlined,SettingOutlined,BellOutlined,ArrowRightOutlined} from '@ant-design/icons';
-import {RouterNode, routerNodes, TemplateRouter} from "@/routers/TemplateRouter";
+import {RouterNode,routerNodes} from "@/routers/TemplateRouter";
 import './index.less'
 import MenuTree from "@/components/menu";
 import {openNotificationWithIcon} from '@/utils/window'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {State} from "@/types/redux";
-import {setLog} from "@/redux/modules/global"
+import {setLog, setMenu} from "@/redux/modules/global"
 import {lazyLoadByString} from "@/utils/lazy_load";
 import {Dom} from "@/types/dom";
-
+import {noteBookListApi} from "@/api/modules/notes";
+import {ResultData} from "@/types/api";
+import {Notes} from "@/types/notes";
+import {deepClone} from "@/utils/var";
+import {store} from "@/redux";
+import {withRouter} from "@/utils/withRouter"
 
 // 规定没有设置侧边滑动时的位移
 const unsetTransform:string = 'translateX(0vw)';
@@ -24,26 +29,37 @@ const OTHER_PANEL = 2;
 const Template = () => {
 
     const location = useLocation();
-    const {user,plan} = useSelector((state:State) => state.global)
+    const {user,plan,menu} = useSelector((state:State) => state.global)
+    const [view,setView] = useState<Array<Route>>([])
     const [bodyTransform,setBodyTransform] = useState<string>(unsetTransform)
     const [currentTransform,setCurrentTransform] = useState<Dom.TemplateTransform>({setTransform:unsetTransform,setWidth:unsetWidth})
     const [drawerContext,setDrawerContext] = useState()
 
-    // 准备被嵌套的子页面Router信息
-    const views = () => {
-        let view = [];
-        for(let group:RouterNode of routerNodes){
+    useEffect(()=>{
+        initView();
+    },[]);
+
+    /**
+     * 渲染需要的视图
+     */
+    const initView = () => {
+        let _view:Array<Route> = [];
+        const _router = menu;//store.getState().global.menu;
+        console.log(_router)
+        let _menu = deepClone(_router);
+        for(let group:RouterNode of _menu){
             if (group.children){
                 for(let app:RouterNode of group.children){
                     if (app.children){
                         // 还有子级
-                        for(let menu:RouterNode of app.children){
+                        for(let link:RouterNode of app.children){
                             // view.push(
-                            //     <Route key={menu.path} path={menu.path} element={React.cloneElement(menu.element, { openDrawer: openDrawer})}/>
+                            //     <Route key={link.path} path={link.path} element={React.cloneElement(link.element, { openDrawer: openDrawer})}/>
                             // )
-                            view.push(
-                                <Route key={menu.path} path={menu.path} element={
-                                    lazyLoadByString(<menu.element openDrawer={openDrawer}/>)
+                            link.element = React.lazy( () => import(`${link.location}`));
+                            _view.push(
+                                <Route key={link.path} path={link.path} element={
+                                    lazyLoadByString(<link.element openDrawer={openDrawer}/>)
                                 } />
                             )
                         }
@@ -51,7 +67,8 @@ const Template = () => {
                         // view.push(
                         //     <Route key={app.path} path={app.path} element={React.cloneElement(app.element, { openDrawer: openDrawer})}/>
                         // )
-                        view.push(
+                        app.element = React.lazy( () => import(`${app.location}`));
+                        _view.push(
                             <Route key={app.path} path={app.path} element={
                                 lazyLoadByString(<app.element openDrawer={openDrawer}/>)
                             } />
@@ -60,25 +77,22 @@ const Template = () => {
                 }
             }
         }
-        return view
+        setView(_view)
     }
-
-    useEffect(()=>{
-        console.log('plan变化了：',plan)
-    },[plan]);
 
 
     // 准备模板页面的title名称细信息
     const title = () => {
         const currentPage = location.pathname
-        for(let group of routerNodes){
+        const _router = menu;//store.getState().global.menu;
+        for(let group of _router){
             if (group.children){
                 for(let app of group.children){
                     if (app.children){
                         // 还有子级
-                        for(let menu of app.children){
-                            if (currentPage === `/backstage${menu.path}`){
-                                return menu.name;
+                        for(let _menu of app.children){
+                            if (currentPage === `/backstage${_menu.path}`){
+                                return _menu.name;
                             }
                         }
                     }else{
@@ -142,7 +156,7 @@ const Template = () => {
                         <div className='project-div' style={{backgroundImage:`url('/picture/favicon.svg')`}}>
                         </div>
                         <div className='project-name'>
-                            映记·知识百宝箱
+                            映记
                         </div>
                     </div>
                     <div className="menu-account">
@@ -189,7 +203,7 @@ const Template = () => {
                         <Suspense>
                             {/*<TemplateRouter/>*/}
                             <Routes>
-                                {views()}
+                                {view}
                             </Routes>
                         </Suspense>
 
@@ -199,9 +213,9 @@ const Template = () => {
                             Copyright &copy; 2016-{(new Date()).getFullYear()} saya.ac.cn - 映记(亲亲里实验室下属文档中心)
                         </div>
                         <nav className="concat">
-                            <a href="#" className="nav-link">门户</a>
-                            <a href="#" className="nav-link">一站通</a>
-                            <a href="#" className="nav-link">映记</a>
+                            <a href="#" className="nav-link">亲亲里·门户</a>
+                            <a href="#" className="nav-link">亲亲里·一站通</a>
+                            <a href="#" className="nav-link">亲亲里·映记</a>
                             <a href="#" className="nav-link">Github</a>
                         </nav>
                     </div>

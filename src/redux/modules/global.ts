@@ -1,7 +1,8 @@
 // redux/modules/global.ts
 import { GlobalState } from "@/types/redux";
 import { createSlice } from "@reduxjs/toolkit"
-
+import {routerNodes} from "@/routers/TemplateRouter";
+import {deepClone} from "@/utils/var"
 const globalState: GlobalState = {
     token: "",
     user:{
@@ -33,7 +34,8 @@ const globalState: GlobalState = {
         city: "",
         date: "",
         detail: ""
-    }
+    },
+    menu:[],
 }
 
 const globalSlice = createSlice({
@@ -51,9 +53,12 @@ const globalSlice = createSlice({
         },
         setLog(state: GlobalState, {payload}) {
             state.log = payload
+        },
+        setMenu(state: GlobalState, {payload}) {
+            state.menu = payload
         }
     }
 })
 
-export const {setToken, setUser,setPlan,setLog} = globalSlice.actions
+export const {setToken, setUser,setPlan,setLog,setMenu} = globalSlice.actions
 export default globalSlice.reducer

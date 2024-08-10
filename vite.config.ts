@@ -22,13 +22,18 @@ export default ({mode}) => {
       host: "0.0.0.0", // 指定服务器应该监听哪个 IP 地址。 如果将此设置为 0.0.0.0 或者 true 将监听所有地址，包括局域网和公网地址。
       port: 3000, //指定开发服务器端口。注意：如果端口已经被使用，Vite 会自动尝试下一个可用的端口
       proxy: {
-        '/backend': {
-          target: env.VITE_API,
+        '/system': {
+          target: "http://127.0.0.1:8001",//env.VITE_API,
+          changeOrigin: true,
+          //rewrite: path => path.replace(/^\/api/, "") //因为实际的地址不带api，所以要去掉api
+        },
+        '/article': {
+          target: "http://127.0.0.1:8004",//env.VITE_API,
           changeOrigin: true,
           //rewrite: path => path.replace(/^\/api/, "") //因为实际的地址不带api，所以要去掉api
         },
         '/warehouse':{
-          target: env.VITE_API,
+          target: "http://127.0.0.1:8002",//env.VITE_API,
           changeOrigin: true,
         }
       }

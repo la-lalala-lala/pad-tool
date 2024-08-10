@@ -220,6 +220,10 @@ html, body {
 .tool-bar,.data-table {
     padding-top: 0.5em;
 }
+
+.data-table{
+    margin-top: 1em;
+}
 /*.data-table .ant-table{*/
 /*    background-color: rgba(255, 255, 255, 0.2) !important;*/
 /*}*/

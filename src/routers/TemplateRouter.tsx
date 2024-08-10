@@ -9,6 +9,7 @@ export interface RouterNode {
     path: string,   // 打开路由
     root: boolean, // 是否为根节点，由于在antd渲染根节点时，需要特殊处理，
     children: Array<RouterNode>, // 子组件
+    location: string,// 组件位置
     element: any,    // 组件
     display: boolean,  // 是否在菜单中显示
     icon: string,// 图标
@@ -145,26 +146,40 @@ export const routerNodes: Array<RouterNode> = [
         root: true,
         children: [
             {
-                name: '主页',
+                name: '最近的',
                 path: '/home',
                 root: true,
                 children: null,
+                location: "../account/index.tsx",
                 element: React.lazy(() => import("@/views/account")),
                 display: true,
                 icon: 'HomeOutlined',
                 content: '2'
             },
             {
-                name: '最近的笔记',
+                name: '草稿箱',
                 path: '/home1',
                 root: true,
                 children: null,
+                location: "../home",
+                element: React.lazy(() => import("@/views/home")),
+                display: true,
+                icon: 'HomeOutlined',
+                content: ''
+            },
+            {
+                name: '废纸篓',
+                path: '/home/2',
+                root: true,
+                children: null,
+                location: "../home",
                 element: React.lazy(() => import("@/views/home")),
                 display: true,
                 icon: 'HomeOutlined',
                 content: ''
             }
         ],
+        location: null,
         element: null,
         display: true,
         icon: '',
@@ -185,6 +200,7 @@ export const routerNodes: Array<RouterNode> = [
                         path: '/plan/activity',
                         root: false,
                         children: null,
+                        location: "../home",
                         element: React.lazy(() => import("@/views/home")),
                         display: true,
                         icon: '',
@@ -195,6 +211,29 @@ export const routerNodes: Array<RouterNode> = [
                         path: '/memory/news',
                         root: false,
                         children: null,
+                        location: "../news",
+                        element: React.lazy(() => import("@/views/news")),
+                        display: true,
+                        icon: '',
+                        content: ''
+                    }
+                ],
+                element: null,
+                display: true,
+                icon: 'FlagOutlined',
+                content: ''
+            },
+            {
+                name: '文章',
+                path: '/memory',
+                root: true,
+                children: [
+                    {
+                        name: '动态',
+                        path: '/memory/news999',
+                        root: false,
+                        children: null,
+                        location: "../news",
                         element: React.lazy(() => import("@/views/news")),
                         display: true,
                         icon: '',
@@ -207,6 +246,7 @@ export const routerNodes: Array<RouterNode> = [
                 content: ''
             }
         ],
+        location: null,
         element: null,
         display: true,
         icon: '',
@@ -227,6 +267,7 @@ export const routerNodes: Array<RouterNode> = [
                         path: '/setting/activity1',
                         root: false,
                         children: null,
+                        location: "../account",
                         element: React.lazy(() => import("@/views/account")),
                         display: true,
                         icon: '',
@@ -237,18 +278,21 @@ export const routerNodes: Array<RouterNode> = [
                         path: '/setting/log',
                         root: false,
                         children: null,
+                        location: "../log",
                         element: React.lazy(() => import("@/views/log")),
                         display: true,
                         icon: '',
                         content: ''
                     }
                 ],
+                location: null,
                 element: null,
                 display: true,
                 icon: 'FlagOutlined',
                 content: ''
             }
         ],
+        location: null,
         element: null,
         display: true,
         icon: '',

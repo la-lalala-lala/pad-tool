@@ -1,13 +1,18 @@
-import {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import "./index.less"
 import {LoadingOutlined} from "@ant-design/icons";
-import {isEmptyObject} from "@/utils/var";
-import { useNavigate } from 'react-router-dom';
+import {deepClone, isEmptyObject} from "@/utils/var";
+import {Route, useNavigate} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
-import { setToken, setUser,setPlan,setLog } from "@/redux/modules/global"
+import {setToken, setUser, setPlan, setLog, setMenu} from "@/redux/modules/global"
 import { State } from "@/types/redux"
 import { loginApi } from "@/api/modules/login";
 import {openNotificationWithIcon} from '@/utils/window'
+import {ResultData} from "@/types/api";
+import {Notes} from "@/types/notes";
+import {noteBookListApi} from "@/api/modules/notes";
+import {RouterNode, routerNodes} from "@/routers/TemplateRouter";
+import {lazyLoadByString} from "@/utils/lazy_load";
 
 const LoginView = () => {
 
@@ -71,6 +76,8 @@ const LoginView = () => {
                 dispatch(setLog(log))
                 // 获取组织用户列表信息
                 //await getOwnOrganizeUser()
+                // 获取笔记簿
+                await getNoteBook();
                 // 跳转到管理界面 (不需要再回退回到登陆),push是需要回退
                 navigate('/backstage/home')
             } else if (code == 5) {
@@ -85,6 +92,57 @@ const LoginView = () => {
             setLoading(false);
         }
     };
+
+    /**
+     * 得到笔记簿下拉选择列表数据
+     */
+    const getNoteBook = async () => {
+        // 发异步ajax请求, 获取数据
+        const result:ResultData<Array<Notes.ResNotes>> = await noteBookListApi();
+        const {code,msg,data} = result;
+        if (code == 0) {
+            // 准备笔记簿的菜单
+            let notebook:Array<RouterNode> = [];
+            for (let item:Notes.ResNotes of data){
+                const _item = {
+                    name: item.name,
+                    path: `/notebook/${item.id}`,
+                    root: false,
+                    children: null,
+                    location: "../note",
+                    element: null,
+                    display: true,
+                    icon: '',
+                    content: `${item.notes_count}`
+                };
+                notebook.push(_item);
+            }
+            let _menu = deepClone(routerNodes);
+            for(let group:RouterNode of _menu){
+                if (group.children){
+                    for(let app:RouterNode of group.children){
+                        if (app.children){
+                            // 还有子级
+                            // 如果是笔记栏目，那么就用接口返回的笔记簿代替
+                            if ('笔记' === app.name){
+                                // 回填到全局store里面
+                                app.children = notebook;
+                            }
+                            for(let link:RouterNode of app.children){
+                                link.element = null;
+                            }
+                        }else{
+                            app.element = null;
+                        }
+                    }
+                }
+            }
+            dispatch(setMenu(_menu))
+        } else {
+            openNotificationWithIcon("error", "错误提示", msg);
+        }
+    }
+
 
     /**
      * 获取自己所在组织下的用户
